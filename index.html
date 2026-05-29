@@ -971,12 +971,26 @@ function rcClick(y,mo,d){
 }
 let _rcLastHov='';
 function rcHoverDay(y,mo,d){
-  if(!rcSelecting) return;
+  if(!rcSelecting||!rcStart) return;
   const key=y+'-'+mo+'-'+d;
   if(key===_rcLastHov) return;
   _rcLastHov=key;
   rcHover=new Date(y,mo,d);
-  rcRender();
+  // Update CSS classes without full re-render
+  const sT=rcStart.getTime();
+  const hovT=rcHover.getTime();
+  const rMin=Math.min(sT,hovT);
+  const rMax=Math.max(sT,hovT);
+  const el=document.getElementById('rc-grid');
+  if(!el) return;
+  el.querySelectorAll('[data-rc]').forEach(function(cell){
+    const cy2=+cell.dataset.y,cm2=+cell.dataset.m,cd2=+cell.dataset.d;
+    const ts=new Date(cy2,cm2,cd2).getTime();
+    cell.classList.remove('rc-end','rc-in-range');
+    if(ts===hovT) cell.classList.add(ts===sT?'rc-start':'rc-end');
+    else if(ts>rMin&&ts<rMax) cell.classList.add('rc-in-range');
+  });
+  rcUpdateInfo();
 }
 function rcPrev(){rcMonth--;if(rcMonth<0){rcMonth=11;rcYear--;}rcRender();}
 function rcNext(){rcMonth++;if(rcMonth>11){rcMonth=0;rcYear++;}rcRender();}
