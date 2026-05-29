@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kashio Payment Operations</title>
+<title>Kashio Payment Operations<\/title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\/script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -435,147 +435,147 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .loading-screen.hide{display:none}
 .spinner{width:32px;height:32px;border:3px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-</style>
-</head>
+<\/style>
+<\/head>
 <body>
 
 <div class="loading-screen" id="loading">
-  <div class="spinner"></div>
-  <div style="font-size:13px;color:var(--text3)">Cargando Kashio Ops...</div>
-</div>
+  <div class="spinner"><\/div>
+  <div style="font-size:13px;color:var(--text3)">Cargando Kashio Ops...<\/div>
+<\/div>
 
 <header class="app-header">
-  <div class="logo"><span class="logo-badge">K</span>Kashio <span style="color:var(--text3);font-weight:400;margin-left:2px">Payment Ops</span></div>
-  <div style="height:20px;width:1px;background:var(--border);margin:0 4px"></div>
-  <span style="font-size:11px;color:var(--text3)">Módulo de Turnos</span>
-  <div class="sync-indicator"><div class="sync-dot" id="sync-dot"></div><span id="sync-text">Sincronizado</span></div>
-</header>
+  <div class="logo"><span class="logo-badge">K<\/span>Kashio <span style="color:var(--text3);font-weight:400;margin-left:2px">Payment Ops<\/span><\/div>
+  <div style="height:20px;width:1px;background:var(--border);margin:0 4px"><\/div>
+  <span style="font-size:11px;color:var(--text3)">Módulo de Turnos<\/span>
+  <div class="sync-indicator"><div class="sync-dot" id="sync-dot"><\/div><span id="sync-text">Sincronizado<\/span><\/div>
+<\/header>
 
 <main class="app-main">
   <div class="toolbar">
     <div style="display:flex;align-items:center;gap:4px">
-      <button class="btn icon" onclick="chM(-1)"><i class="ti ti-chevron-left"></i></button>
-      <span class="month-title" id="mtitle"></span>
-      <button class="btn icon" onclick="chM(1)"><i class="ti ti-chevron-right"></i></button>
-      <button class="btn" onclick="goT()">Hoy</button>
-    </div>
-    <button class="btn green" onclick="openRP()"><i class="ti ti-calendar-event"></i> Asignar por rango</button>
-    <button class="btn blue" onclick="openAI()"><i class="ti ti-sparkles"></i> Rotación FDS</button>
-    <button class="btn purple" onclick="openGP()"><i class="ti ti-layout-list"></i> Grupos y tareas</button>
-    <button class="btn" onclick="openTeam()" style="color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-users"></i> Equipo</button>
+      <button class="btn icon" onclick="chM(-1)"><i class="ti ti-chevron-left"><\/i><\/button>
+      <span class="month-title" id="mtitle"><\/span>
+      <button class="btn icon" onclick="chM(1)"><i class="ti ti-chevron-right"><\/i><\/button>
+      <button class="btn" onclick="goT()">Hoy<\/button>
+    <\/div>
+    <button class="btn green" onclick="openRP()"><i class="ti ti-calendar-event"><\/i> Asignar por rango<\/button>
+    <button class="btn blue" onclick="openAI()"><i class="ti ti-sparkles"><\/i> Rotación FDS<\/button>
+    <button class="btn purple" onclick="openGP()"><i class="ti ti-layout-list"><\/i> Grupos y tareas<\/button>
+    <button class="btn" onclick="openTeam()" style="color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-users"><\/i> Equipo<\/button>
     <div class="vtabs" style="margin-left:auto">
-      <button class="vtab on" id="tm" onclick="sv('month')">Mes</button>
-      <button class="vtab" id="tw" onclick="sv('week')">Semana</button>
-    </div>
-    <button class="btn" id="export-btn" onclick="exportWeekExcel()" style="display:none;color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-file-spreadsheet"></i> Exportar semana</button>
-  </div>
+      <button class="vtab on" id="tm" onclick="sv('month')">Mes<\/button>
+      <button class="vtab" id="tw" onclick="sv('week')">Semana<\/button>
+    <\/div>
+    <button class="btn" id="export-btn" onclick="exportWeekExcel()" style="display:none;color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-file-spreadsheet"><\/i> Exportar semana<\/button>
+  <\/div>
 
-  <div class="legend" id="leg"></div>
-  <div id="cal"></div>
-</main>
+  <div class="legend" id="leg"><\/div>
+  <div id="cal"><\/div>
+<\/main>
 
-<div class="ov" id="ov"></div>
-<div class="toast" id="toast"></div>
+<div class="ov" id="ov"><\/div>
+<div class="toast" id="toast"><\/div>
 
 <!-- Day panel -->
 <div class="panel" id="panel">
-  <div class="ph"><button class="pc" onclick="closeP()"><i class="ti ti-x"></i></button><div class="pt" id="pt"></div><div class="ps" id="ps"></div></div>
-  <div class="pb" id="pb"></div>
-  <div class="pf"><button class="savebtn" onclick="saveAndClose()"><i class="ti ti-check"></i> Guardar y cerrar</button><button class="clearbtn" id="clear-day-btn" style="display:none"></button></div>
-</div>
+  <div class="ph"><button class="pc" onclick="closeP()"><i class="ti ti-x"><\/i><\/button><div class="pt" id="pt"><\/div><div class="ps" id="ps"><\/div><\/div>
+  <div class="pb" id="pb"><\/div>
+  <div class="pf"><button class="savebtn" onclick="saveAndClose()"><i class="ti ti-check"><\/i> Guardar y cerrar<\/button><button class="clearbtn" id="clear-day-btn" style="display:none"><\/button><\/div>
+<\/div>
 
 <!-- Range panel -->
 <div class="rp" id="rp">
   <div class="rp-hd">
-    <button class="pc" style="left:14px;right:auto" onclick="closeRP()"><i class="ti ti-x"></i></button>
+    <button class="pc" style="left:14px;right:auto" onclick="closeRP()"><i class="ti ti-x"><\/i><\/button>
     <div style="padding-left:32px">
-      <div class="pt"><i class="ti ti-calendar-event" style="color:var(--green)"></i> Asignar por rango</div>
-      <div class="ps">Selecciona el período, operadores y grupos en un solo paso</div>
-    </div>
-  </div>
+      <div class="pt"><i class="ti ti-calendar-event" style="color:var(--green)"><\/i> Asignar por rango<\/div>
+      <div class="ps">Selecciona el período, operadores y grupos en un solo paso<\/div>
+    <\/div>
+  <\/div>
   <div class="rp-bd">
 
     <!-- Visual date range picker -->
     <div>
-      <div class="sl">1 — Selecciona el período</div>
+      <div class="sl">1 — Selecciona el período<\/div>
       <div class="range-cal-wrap">
         <div class="rc-header">
-          <button class="rc-nav" onclick="rcPrev()"><i class="ti ti-chevron-left"></i></button>
-          <span class="rc-month" id="rc-month-title"></span>
-          <button class="rc-nav" onclick="rcNext()"><i class="ti ti-chevron-right"></i></button>
-        </div>
-        <div class="rc-grid" id="rc-grid"></div>
+          <button class="rc-nav" onclick="rcPrev()"><i class="ti ti-chevron-left"><\/i><\/button>
+          <span class="rc-month" id="rc-month-title"><\/span>
+          <button class="rc-nav" onclick="rcNext()"><i class="ti ti-chevron-right"><\/i><\/button>
+        <\/div>
+        <div class="rc-grid" id="rc-grid"><\/div>
         <div class="range-info" id="range-info">
-          <span style="color:var(--text3)">Haz clic en el día de inicio y luego en el día final</span>
-        </div>
-      </div>
+          <span style="color:var(--text3)">Haz clic en el día de inicio y luego en el día final<\/span>
+        <\/div>
+      <\/div>
       <div class="chk-opts" style="margin-top:10px">
-        <label class="chk-opt"><input type="checkbox" id="r-skip-we" onchange="updatePreview()"> Omitir fines de semana</label>
-        <label class="chk-opt"><input type="checkbox" id="r-overwrite" checked> Sobrescribir existentes</label>
-      </div>
-    </div>
+        <label class="chk-opt"><input type="checkbox" id="r-skip-we" onchange="updatePreview()"> Omitir fines de semana<\/label>
+        <label class="chk-opt"><input type="checkbox" id="r-overwrite" checked> Sobrescribir existentes<\/label>
+      <\/div>
+    <\/div>
 
     <!-- Operators + hours -->
     <div>
-      <div class="sl">2 — Operadores y horario</div>
-      <div id="r-ops"></div>
+      <div class="sl">2 — Operadores y horario<\/div>
+      <div id="r-ops"><\/div>
       <div style="display:flex;gap:5px;margin-top:6px">
-        <button class="btn" style="font-size:10px" onclick="rSelAll()"><i class="ti ti-users"></i> Todos</button>
-        <button class="btn" style="font-size:10px" onclick="rClrAll()">Ninguno</button>
-      </div>
-    </div>
+        <button class="btn" style="font-size:10px" onclick="rSelAll()"><i class="ti ti-users"><\/i> Todos<\/button>
+        <button class="btn" style="font-size:10px" onclick="rClrAll()">Ninguno<\/button>
+      <\/div>
+    <\/div>
 
     <!-- Groups -->
     <div>
-      <div class="sl">3 — Grupos a asignar</div>
-      <div class="g-sel-wrap" id="r-assign-body"></div>
-    </div>
+      <div class="sl">3 — Grupos a asignar<\/div>
+      <div class="g-sel-wrap" id="r-assign-body"><\/div>
+    <\/div>
 
     <!-- Preview -->
     <div>
-      <div class="sl">Vista previa</div>
-      <div class="preview-box" id="r-preview">Completa los pasos para ver el resumen.</div>
-    </div>
-  </div>
+      <div class="sl">Vista previa<\/div>
+      <div class="preview-box" id="r-preview">Completa los pasos para ver el resumen.<\/div>
+    <\/div>
+  <\/div>
   <div class="rp-ft">
-    <button class="apply-btn" onclick="applyRange()"><i class="ti ti-check"></i> Aplicar asignación</button>
+    <button class="apply-btn" onclick="applyRange()"><i class="ti ti-check"><\/i> Aplicar asignación<\/button>
     <div style="display:flex;gap:6px">
-      <button class="clear-btn" style="flex:1" onclick="clearRange()"><i class="ti ti-trash"></i> Borrar asignaciones del rango</button>
-      <button class="clear-btn" style="flex:1;color:#F56565;border-color:#5A2020" onclick="clearAllRange()"><i class="ti ti-circle-x"></i> Limpiar todo</button>
-    </div>
-  </div>
-</div>
+      <button class="clear-btn" style="flex:1" onclick="clearRange()"><i class="ti ti-trash"><\/i> Borrar asignaciones del rango<\/button>
+      <button class="clear-btn" style="flex:1;color:#F56565;border-color:#5A2020" onclick="clearAllRange()"><i class="ti ti-circle-x"><\/i> Limpiar todo<\/button>
+    <\/div>
+  <\/div>
+<\/div>
 
 <!-- AI panel -->
 <div class="aip" id="aip">
-  <div class="ph"><button class="pc" style="left:14px;right:auto" onclick="closeAI()"><i class="ti ti-x"></i></button><div style="padding-left:32px"><div class="pt"><i class="ti ti-sparkles" style="color:var(--blue)"></i> Asistente rotación FDS</div><div class="ps">Historial y recomendación por sábado y domingo</div></div></div>
-  <div style="padding:14px 18px;flex:1;overflow-y:auto" id="ai-body"></div>
-</div>
+  <div class="ph"><button class="pc" style="left:14px;right:auto" onclick="closeAI()"><i class="ti ti-x"><\/i><\/button><div style="padding-left:32px"><div class="pt"><i class="ti ti-sparkles" style="color:var(--blue)"><\/i> Asistente rotación FDS<\/div><div class="ps">Historial y recomendación por sábado y domingo<\/div><\/div><\/div>
+  <div style="padding:14px 18px;flex:1;overflow-y:auto" id="ai-body"><\/div>
+<\/div>
 
 <!-- Groups panel -->
 <div class="gp" id="gp">
-  <div class="gp-hd"><button class="pc" onclick="closeGP()"><i class="ti ti-x"></i></button><div class="pt"><i class="ti ti-layout-list"></i> Grupos y tareas</div><div class="ps">Edita nombres, arrastra tareas para reordenar, copia o mueve entre grupos</div></div>
-  <div class="gp-bd" id="gb"></div>
-</div>
+  <div class="gp-hd"><button class="pc" onclick="closeGP()"><i class="ti ti-x"><\/i><\/button><div class="pt"><i class="ti ti-layout-list"><\/i> Grupos y tareas<\/div><div class="ps">Edita nombres, arrastra tareas para reordenar, copia o mueve entre grupos<\/div><\/div>
+  <div class="gp-bd" id="gb"><\/div>
+<\/div>
 
 <!-- Task detail panel -->
 <div class="tp" id="tp">
-  <div class="tp-hd"><button class="pc" onclick="closeTP()"><i class="ti ti-x"></i></button><div id="tp-badge-wrap"></div><input class="tp-name" id="tp-name" placeholder="Nombre de la tarea" onchange="saveTaskName()"><div style="display:flex;align-items:center;gap:5px;margin-top:9px;flex-wrap:wrap" id="tp-freq-wrap"></div></div>
-  <div class="tp-bd" id="tp-body"></div>
-</div>
+  <div class="tp-hd"><button class="pc" onclick="closeTP()"><i class="ti ti-x"><\/i><\/button><div id="tp-badge-wrap"><\/div><input class="tp-name" id="tp-name" placeholder="Nombre de la tarea" onchange="saveTaskName()"><div style="display:flex;align-items:center;gap:5px;margin-top:9px;flex-wrap:wrap" id="tp-freq-wrap"><\/div><\/div>
+  <div class="tp-bd" id="tp-body"><\/div>
+<\/div>
 
 <!-- Team panel -->
 <div class="panel" id="team-panel" style="width:440px;right:-460px;z-index:102;transition:right .22s cubic-bezier(.4,0,.2,1)">
   <div class="ph" style="background:#FFFFFF;border-color:#E2E6ED">
-    <button class="pc" style="border-color:#E2E6ED;color:#8896A7" onclick="closeTeam()"><i class="ti ti-x"></i></button>
-    <div class="pt" style="color:#0F1923"><i class="ti ti-users" style="color:#0F6E56"></i> Gestión del equipo</div>
-    <div class="ps" style="color:#8896A7">Edita nombres, iniciales y colores. Agrega o elimina integrantes.</div>
-  </div>
-  <div class="pb" id="team-body" style="background:#F5F6FA;overflow-y:auto"></div>
+    <button class="pc" style="border-color:#E2E6ED;color:#8896A7" onclick="closeTeam()"><i class="ti ti-x"><\/i><\/button>
+    <div class="pt" style="color:#0F1923"><i class="ti ti-users" style="color:#0F6E56"><\/i> Gestión del equipo<\/div>
+    <div class="ps" style="color:#8896A7">Edita nombres, iniciales y colores. Agrega o elimina integrantes.<\/div>
+  <\/div>
+  <div class="pb" id="team-body" style="background:#F5F6FA;overflow-y:auto"><\/div>
   <div class="pf" style="background:#FFFFFF;border-color:#E2E6ED">
-    <button class="savebtn" onclick="saveTeamAndClose()" style="background:#0F6E56"><i class="ti ti-check"></i> Guardar cambios</button>
-  </div>
-</div>
+    <button class="savebtn" onclick="saveTeamAndClose()" style="background:#0F6E56"><i class="ti ti-check"><\/i> Guardar cambios<\/button>
+  <\/div>
+<\/div>
 <script>
 
 const SUPA_URL='https://csthgljcamrkklmnhcqz.supabase.co';
@@ -593,7 +593,7 @@ let OPS=[
   {id:'diana',  name:'Diana',         short:'Diana', init:'DI', bg:'var(--diana)',   tc:'var(--diana-t)'},
 ];
 const TIME_OPTS=(()=>{const o=[];for(let h=0;h<24;h++)for(let m of[0,30])o.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);return o;})();
-function timeSelect(cls,val,onchange,style=''){return '<select class="'+cls+'" style="'+style+'" onchange="'+onchange+'" onclick="event.stopPropagation()">'+TIME_OPTS.map(t=>'<option value="'+t+'"'+(t===val?' selected':'')+'>'+t+'</option>').join('')+'</select>';}
+function timeSelect(cls,val,onchange,style=''){return '<select class="'+cls+'" style="'+style+'" onchange="'+onchange+'" onclick="event.stopPropagation()">'+TIME_OPTS.map(t=>'<option value="'+t+'"'+(t===val?' selected':'')+'>'+t+'<\/option>').join('')+'<\/select>';}
 const FREQS=['c/hora','1×día','Inicio jornada','Cierre jornada','Ocasional','Sábados','Domingos'];
 async function loadTeamDB(){
   try{
@@ -944,7 +944,7 @@ function openP(dks,opId){
     const assigned=OPS.filter(op=>getArr(y,m,d,op.id).length>0);
     if(assigned.length>0){
       summary='<div style="background:#F5F8FF;border:1px solid #E2E6ED;border-radius:8px;padding:12px 14px;margin-bottom:14px">';
-      summary+='<div style="font-size:10px;font-weight:600;color:#8896A7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Resumen del día</div>';
+      summary+='<div style="font-size:10px;font-weight:600;color:#8896A7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Resumen del día<\/div>';
       summary+='<div style="display:flex;flex-direction:column;gap:8px">';
       assigned.forEach(op=>{
         const arr=getArr(y,m,d,op.id);
@@ -957,30 +957,30 @@ function openP(dks,opId){
           const g=gG(gid);
           if(g&&g.tasks.length) g.tasks.forEach(t=>tasks.push({t,bg:g.bg,tc:g.tc,badge:g.badge}));
         });
-        const badges=arr.map(gid=>{const g=gG(gid);return g?'<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:'+g.bg+';color:'+g.tc+'">'+g.badge+'</span>':''}).join(' ');
+        const badges=arr.map(gid=>{const g=gG(gid);return g?'<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:'+g.bg+';color:'+g.tc+'">'+g.badge+'<\/span>':''}).join(' ');
         summary+='<div style="background:#fff;border-radius:8px;border:1px solid #E8ECF4;overflow:hidden;margin-bottom:4px">';
         // Header row
         summary+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#FAFBFF;border-bottom:1px solid #E8ECF4">';
-        summary+='<div style="width:30px;height:30px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;border:2px solid '+op.tc+'40">'+op.init+'</div>';
-        summary+='<div style="flex:1"><div style="font-size:12px;font-weight:600;color:#0F1923">'+op.name+'</div>';
-        summary+='<div style="font-size:10px;color:#8896A7;margin-top:1px">'+timeStr+'</div></div>';
-        summary+='<div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:700;color:'+(hh>0?'#185FA5':'#8896A7')+'">'+(hh>0?hh+'h':'—')+'</div>';
-        summary+='<div style="display:flex;gap:3px;justify-content:flex-end;margin-top:2px">'+badges+'</div></div>';
-        summary+='</div>';
+        summary+='<div style="width:30px;height:30px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;border:2px solid '+op.tc+'40">'+op.init+'<\/div>';
+        summary+='<div style="flex:1"><div style="font-size:12px;font-weight:600;color:#0F1923">'+op.name+'<\/div>';
+        summary+='<div style="font-size:10px;color:#8896A7;margin-top:1px">'+timeStr+'<\/div><\/div>';
+        summary+='<div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:700;color:'+(hh>0?'#185FA5':'#8896A7')+'">'+(hh>0?hh+'h':'—')+'<\/div>';
+        summary+='<div style="display:flex;gap:3px;justify-content:flex-end;margin-top:2px">'+badges+'<\/div><\/div>';
+        summary+='<\/div>';
         // Tasks list
         if(tasks.length){
           summary+='<div style="padding:6px 12px 8px">';
           tasks.forEach(({t,bg,tc,badge})=>{
             summary+='<div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid #F0F2F8">';
-            summary+='<span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:'+bg+';color:'+tc+';flex-shrink:0">'+badge+'</span>';
-            summary+='<span style="font-size:11px;color:#2D3748">'+t+'</span>';
-            summary+='</div>';
+            summary+='<span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:'+bg+';color:'+tc+';flex-shrink:0">'+badge+'<\/span>';
+            summary+='<span style="font-size:11px;color:#2D3748">'+t+'<\/span>';
+            summary+='<\/div>';
           });
-          summary+='</div>';
+          summary+='<\/div>';
         }
-        summary+='</div>';
+        summary+='<\/div>';
       });
-      summary+='</div></div>';
+      summary+='<\/div><\/div>';
     }
   }
   document.getElementById('pb').innerHTML=summary+b;
@@ -1267,9 +1267,9 @@ function renderGB(){
       const ghh=calcH(g.hInicio||'09:00',g.hFin||'18:00');
       h+=`<div class="gcard-body">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:6px 10px;background:#F0F4FF;border-radius:6px;border:1px solid #D0D8F0">
-          <span style="font-size:10px;color:#4A5568;font-weight:600">⏰ Horario por defecto</span>
+          <span style="font-size:10px;color:#4A5568;font-weight:600">⏰ Horario por defecto<\/span>
           ${timeSelect('tinp',g.hInicio||'09:00',"groups["+gi+"].hInicio=this.value;saveGrupo(groups["+gi+"])")}
-          <span style="font-size:10px;color:#8896A7">→</span>
+          <span style="font-size:10px;color:#8896A7">→<\/span>
           ${timeSelect('tinp',g.hFin||'18:00',"groups["+gi+"].hFin=this.value;saveGrupo(groups["+gi+"])")}
           <span style="font-size:11px;font-weight:600;color:#185FA5">${ghh}h<\/span>
           <span style="font-size:9px;color:#8896A7;margin-left:4px">Se aplica automáticamente al asignar<\/span>
@@ -1522,8 +1522,7 @@ function exportWeekExcel(){
         grupos,
         horario,
         hh>0?`${hh}h`:'—',
-        tasks.join('
-')
+        tasks.join('\n')
       ]);
       opAdded=true;
     });
@@ -1583,6 +1582,6 @@ function exportWeekExcel(){
 }
 
 loadAll();
-</script></script>
+<\/script></script>
 </body>
 </html>
