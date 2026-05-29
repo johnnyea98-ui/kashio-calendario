@@ -925,9 +925,22 @@ function rcRender(){
     if(s&&ts===s)cls+=' rc-start';
     if(rangeEnd&&ts===rangeEnd&&ts!==s)cls+=' rc-end';
     if(s&&rangeEnd&&ts>Math.min(s,rangeEnd)&&ts<Math.max(s,rangeEnd))cls+=' rc-in-range';
-    h+=`<div class="${cls}" data-y="${y}" data-m="${mo}" data-d="${d}" onclick="rcClick(${y},${mo},${d})" onmousemove="rcHoverDay(${y},${mo},${d})">${d}</div>`;
+    h+=`<div class="${cls}" data-y="${y}" data-m="${mo}" data-d="${d}" data-rc="1">${d}</div>`;
   }
   el.innerHTML=h;
+  // Event delegation - single listener on grid
+  el.onclick=function(e){
+    const cell=e.target.closest('[data-rc]');
+    if(!cell)return;
+    const y=+cell.dataset.y,mo=+cell.dataset.m,d=+cell.dataset.d;
+    rcClick(y,mo,d);
+  };
+  el.onmousemove=function(e){
+    const cell=e.target.closest('[data-rc]');
+    if(!cell)return;
+    const y=+cell.dataset.y,mo=+cell.dataset.m,d=+cell.dataset.d;
+    rcHoverDay(y,mo,d);
+  };
   rcUpdateInfo();
 }
 function rcClick(y,mo,d){
@@ -956,7 +969,15 @@ function rcClick(y,mo,d){
   }
   rcRender();updatePreview();
 }
-function rcHoverDay(y,mo,d){if(rcSelecting){rcHover=new Date(y,mo,d);rcRender();}}
+let _rcLastHov='';
+function rcHoverDay(y,mo,d){
+  if(!rcSelecting) return;
+  const key=y+'-'+mo+'-'+d;
+  if(key===_rcLastHov) return;
+  _rcLastHov=key;
+  rcHover=new Date(y,mo,d);
+  rcRender();
+}
 function rcPrev(){rcMonth--;if(rcMonth<0){rcMonth=11;rcYear--;}rcRender();}
 function rcNext(){rcMonth++;if(rcMonth>11){rcMonth=0;rcYear++;}rcRender();}
 function rcUpdateInfo(){
