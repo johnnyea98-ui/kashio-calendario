@@ -2,9 +2,6 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kashio Payment Operations</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
@@ -462,6 +459,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
     <button class="btn blue" onclick="openAI()"><i class="ti ti-sparkles"></i> Rotación FDS</button>
     <button class="btn purple" onclick="openGP()"><i class="ti ti-layout-list"></i> Grupos y tareas</button>
     <button class="btn" onclick="openTeam()" style="color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-users"></i> Equipo</button>
+    <button class="btn" onclick="openTeam()" style="color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-users"></i> Equipo</button>
     <div class="vtabs" style="margin-left:auto">
       <button class="vtab on" id="tm" onclick="sv('month')">Mes</button>
       <button class="vtab" id="tw" onclick="sv('week')">Semana</button>
@@ -575,6 +573,19 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
     <button class="savebtn" onclick="saveTeamAndClose()" style="background:#0F6E56"><i class="ti ti-check"></i> Guardar cambios</button>
   </div>
 </div>
+<!-- Team panel -->
+<div class="panel" id="team-panel" style="width:440px;right:-460px;z-index:102;transition:right .22s ease">
+  <div class="ph" style="background:#FFFFFF;border-color:#E2E6ED">
+    <button class="pc" style="border-color:#E2E6ED;color:#8896A7" onclick="closeTeam()"><i class="ti ti-x"></i></button>
+    <div class="pt" style="color:#0F1923"><i class="ti ti-users" style="color:#0F6E56"></i> Gestión del equipo</div>
+    <div class="ps" style="color:#8896A7">Edita nombres, iniciales y colores.</div>
+  </div>
+  <div class="pb" id="team-body" style="background:#F5F6FA;overflow-y:auto"></div>
+  <div class="pf" style="background:#FFFFFF;border-color:#E2E6ED">
+    <button class="savebtn" onclick="saveTeamAndClose()" style="background:#0F6E56"><i class="ti ti-check"></i> Guardar cambios</button>
+  </div>
+</div>
+
 <script>
 const SUPA_URL='https://csthgljcamrkklmnhcqz.supabase.co';
 const SUPA_KEY='sb_publishable_uJOV1rowXYxFUF-_9bk2tg_khtNDBRK';
@@ -660,6 +671,7 @@ async function loadAll(){
     if(tdData)tdData.forEach(td=>{if(!taskDetail[td.grupo_id])taskDetail[td.grupo_id]={};taskDetail[td.grupo_id][td.tarea_idx]={name:td.nombre,desc:td.descripcion,freq:td.frecuencia,steps:Array.isArray(td.pasos)?td.pasos:JSON.parse(td.pasos||'[]'),comments:Array.isArray(td.comentarios)?td.comentarios:JSON.parse(td.comentarios||'[]')};});
     // Load team from Supabase
     await loadTeamDB();
+    await loadTeamDB();
     await loadAsgn(cy,cm);
     document.getElementById('loading').classList.add('hide');
     renderC();
@@ -720,27 +732,29 @@ function dayChipsHtml(y,m,d){
   return h;
 }
 function renderMonth(){
-  const fd=new Date(cy,cm,1).getDay(),dim=new Date(cy,cm+1,0).getDate(),dip=new Date(cy,cm,0).getDate();
-  let h=`<div class="cal"><div class="cal-grid">`;
-  DY.forEach((d,i)=>h+=`<div class="dh${i===0||i===6?' we':''}">${d}</div>`);
+  const raw=new Date(cy,cm,1).getDay();
+  const fd=(raw===0)?6:raw-1;
+  const dim=new Date(cy,cm+1,0).getDate(),dip=new Date(cy,cm,0).getDate();
+  let h='<div class="cal"><div class="cal-grid">';
+  ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach((d,i)=>{h+='<div class="dh'+(i>=5?' we':'')+'">'+d+'</div>';});
   const cells=Math.ceil((fd+dim)/7)*7;
   for(let i=0;i<cells;i++){
     let d,mo=cm,y=cy,om=false;
     if(i<fd){d=dip-fd+i+1;mo=cm-1;om=true;if(mo<0){mo=11;y--;}}
     else if(i>=fd+dim){d=i-fd-dim+1;mo=cm+1;om=true;if(mo>11){mo=0;y++;}}
     else d=i-fd+1;
-    const wd=i%7,we=wd===0||wd===6,isT=!om&&d===today.getDate()&&cm===today.getMonth()&&cy===today.getFullYear();
+    const col=i%7,we=col>=5;
+    const isT=!om&&d===today.getDate()&&cm===today.getMonth()&&cy===today.getFullYear();
     const dks=dk(y,mo,d);
-    let chips='';if(!om){chips=dayChipsHtml(y,mo,d);if(!chips)chips=`<div class="hint">+ asignar</div>`;}
-    h+=`<div class="dc${om?' om':''}${we?' wec':''}${isT?' tod':''}" onclick="openP('${dks}',null)"><div class="dn">${d}</div>${chips}</div>`;
+    let chips='';if(!om){chips=dayChipsHtml(y,mo,d);if(!chips)chips='<div class="hint">+ asignar</div>';}
+    h+='<div class="dc'+(om?' om':'')+(we?' wec':'')+(isT?' tod':'')+'" onclick="openP(\''+dks+'\',null)"><div class="dn">'+d+'</div>'+chips+'</div>';
   }
-  return h+`</div></div>`;
+  return h+'</div></div>';
 }
-function wkDates2(){const s=new Date(cy,cm,1);s.setDate(s.getDate()-s.getDay()+woff*7);return Array.from({length:7},(_,i)=>{const d=new Date(s);d.setDate(s.getDate()+i);return d;});}
 function renderWeek(){
   const dates=wkDates2();
   let h=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px"><button class="btn icon" onclick="woff--;renderC(true)"><i class="ti ti-chevron-left"></i></button><span style="font-size:12px;color:var(--text3)">${dates[0].getDate()}/${dates[0].getMonth()+1} – ${dates[6].getDate()}/${dates[6].getMonth()+1}</span><button class="btn icon" onclick="woff++;renderC(true)"><i class="ti ti-chevron-right"></i></button></div><div class="wg"><div class="wh">Op.</div>`;
-  dates.forEach((d,i)=>{const isT=d.getDate()===today.getDate()&&d.getMonth()===today.getMonth()&&d.getFullYear()===today.getFullYear();const we=i===0||i===6;h+=`<div class="wh${we?' we':''}" style="${isT?'color:var(--amber);font-weight:700':''}">${DY[d.getDay()]} ${d.getDate()}</div>`;});
+  const WN=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];dates.forEach((d,i)=>{const isT=d.getDate()===today.getDate()&&d.getMonth()===today.getMonth()&&d.getFullYear()===today.getFullYear();const we=i>=5;h+='<div class="wh'+(we?' we':'')+'" style="'+(isT?'color:var(--amber);font-weight:700':'')+'">'+(WN[i])+' '+d.getDate()+'</div>';});;
   h+=`</div>`;
   OPS.forEach(op=>{
     h+=`<div class="wg"><div class="wop"><div class="av" style="background:${op.bg};color:${op.tc}">${op.init}</div><span>${op.short}</span></div>`;
@@ -760,25 +774,30 @@ let _lY=null,_lM=null;
 async function renderC(force){
   document.getElementById('mtitle').textContent=`${MO[cm]} ${cy}`;
   if(force||_lY!==cy||_lM!==cm){
-    await loadAsgn(cy,cm);
-    _lY=cy;_lM=cm;
-    // If week view, also load adjacent months if week spans them
+    await loadAsgn(cy,cm);_lY=cy;_lM=cm;
     if(view==='week'){
       const dates=wkDates2();
       const first=dates[0],last=dates[6];
-      if(first.getMonth()!==cm||first.getFullYear()!==cy){
-        await loadAsgn(first.getFullYear(),first.getMonth());
-      }
-      if(last.getMonth()!==cm||last.getFullYear()!==cy){
-        await loadAsgn(last.getFullYear(),last.getMonth());
-      }
+      if(first.getMonth()!==cm||first.getFullYear()!==cy) await loadAsgn(first.getFullYear(),first.getMonth());
+      if(last.getMonth()!==cm||last.getFullYear()!==cy) await loadAsgn(last.getFullYear(),last.getMonth());
     }
   }
   document.getElementById('cal').innerHTML=view==='month'?renderMonth():renderWeek();
   renderLeg();
+  if(view==='week')renderHoursBar();
 }
 async function chM(d){cm+=d;if(cm>11){cm=0;cy++;}if(cm<0){cm=11;cy--;}woff=0;await renderC(true);}
-function goT(){cy=today.getFullYear();cm=today.getMonth();woff=0;renderC(true);}
+function goT(){
+  cy=today.getFullYear();cm=today.getMonth();
+  if(view==='week'){
+    const base=new Date(cy,cm,1);const dow=base.getDay();const d2m=(dow===0)?-6:1-dow;
+    const fMon=new Date(base);fMon.setDate(base.getDate()+d2m);
+    const td=new Date(today);const tdow=td.getDay();const td2m=(tdow===0)?-6:1-tdow;
+    const tMon=new Date(td);tMon.setDate(td.getDate()+td2m);
+    woff=Math.round((tMon-fMon)/(7*24*60*60*1000));
+  } else {woff=0;}
+  renderC();
+}
 function sv(v){
   if(v==='week'){
     const base=new Date(cy,cm,1);const dow=base.getDay();const d2m=(dow===0)?-6:1-dow;
@@ -813,20 +832,13 @@ function openP(dks,opId){
   if(!opId){
     const assigned=OPS.filter(op=>getArr(y,m,d,op.id).length>0);
     if(assigned.length>0){
-      summary='<div style="background:#F5F8FF;border:1px solid #E2E6ED;border-radius:8px;padding:12px 14px;margin-bottom:14px">';
-      summary+='<div style="font-size:10px;font-weight:600;color:#8896A7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Resumen del día</div>';
-      summary+='<div style="display:flex;flex-direction:column;gap:6px">';
+      summary='<div style="background:#F5F8FF;border:1px solid #E2E6ED;border-radius:8px;padding:12px 14px;margin-bottom:14px"><div style="font-size:10px;font-weight:600;color:#8896A7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Resumen del día</div><div style="display:flex;flex-direction:column;gap:6px">';
       assigned.forEach(op=>{
-        const arr=getArr(y,m,d,op.id);
-        const h2=getH(y,m,d,op.id);const hh=calcH(h2.inicio,h2.fin);
+        const arr=getArr(y,m,d,op.id);const h2=getH(y,m,d,op.id);const hh=calcH(h2.inicio,h2.fin);
         const tasks=[];arr.forEach(gid=>{const g=gG(gid);if(g&&g.tasks.length)g.tasks.forEach(t=>tasks.push({t,bg:g.bg,tc:g.tc,badge:g.badge}));});
         const badges=arr.map(gid=>{const g=gG(gid);return g?'<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:'+g.bg+';color:'+g.tc+'">'+g.badge+'</span>':''}).join(' ');
         const timeStr=h2.inicio&&h2.fin?h2.inicio+' → '+h2.fin:'Sin horario';
-        summary+='<div style="background:#fff;border-radius:8px;border:1px solid #E8ECF4;overflow:hidden;margin-bottom:4px">';
-        summary+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#FAFBFF;border-bottom:1px solid #E8ECF4">';
-        summary+='<div style="width:30px;height:30px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">'+op.init+'</div>';
-        summary+='<div style="flex:1"><div style="font-size:12px;font-weight:600;color:#0F1923">'+op.name+'</div><div style="font-size:10px;color:#8896A7">'+timeStr+'</div></div>';
-        summary+='<div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:700;color:'+(hh>0?'#185FA5':'#8896A7')+'">'+(hh>0?hh+'h':'—')+'</div><div style="display:flex;gap:3px;justify-content:flex-end;margin-top:2px">'+badges+'</div></div></div>';
+        summary+='<div style="background:#fff;border-radius:8px;border:1px solid #E8ECF4;overflow:hidden;margin-bottom:4px"><div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#FAFBFF;border-bottom:1px solid #E8ECF4"><div style="width:30px;height:30px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">'+op.init+'</div><div style="flex:1"><div style="font-size:12px;font-weight:600;color:#0F1923">'+op.name+'</div><div style="font-size:10px;color:#8896A7">'+timeStr+'</div></div><div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:700;color:'+(hh>0?'#185FA5':'#8896A7')+'">'+(hh>0?hh+'h':'—')+'</div><div style="display:flex;gap:3px;justify-content:flex-end;margin-top:2px">'+badges+'</div></div></div>';
         if(tasks.length){summary+='<div style="padding:6px 12px 8px">';tasks.forEach(({t,bg,tc,badge})=>{summary+='<div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid #F0F2F8"><span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:'+bg+';color:'+tc+';flex-shrink:0">'+badge+'</span><span style="font-size:11px;color:#2D3748">'+t+'</span></div>';});summary+='</div>';}
         summary+='</div>';
       });
@@ -860,11 +872,11 @@ function closeP(){document.getElementById('panel').classList.remove('on');docume
 function rcRender(){
   const el=document.getElementById('rc-grid');
   document.getElementById('rc-month-title').textContent=`${MO[rcMonth]} ${rcYear}`;
-  const fd=new Date(rcYear,rcMonth,1).getDay();
+  const rawFd=new Date(rcYear,rcMonth,1).getDay();const fd=(rawFd===0)?6:rawFd-1;
   const dim=new Date(rcYear,rcMonth+1,0).getDate();
   const dip=new Date(rcYear,rcMonth,0).getDate();
   let h='';
-  ['Do','Lu','Ma','Mi','Ju','Vi','Sa'].forEach((d,i)=>h+=`<div class="rc-dh${i===0||i===6?' we':''}">${d}</div>`);
+  ['Lu','Ma','Mi','Ju','Vi','Sa','Do'].forEach((d,i)=>h+='<div class="rc-dh'+(i>=5?' we':'')+'">'+(d)+'</div>');
   const cells=Math.ceil((fd+dim)/7)*7;
   for(let i=0;i<cells;i++){
     let d,mo=rcMonth,y=rcYear,other=false;
@@ -982,7 +994,7 @@ async function applyRange(){
 async function clearAllRange(){
   const dates=getRangeDates();
   if(!dates.length){alert('Selecciona un período primero.');return;}
-  if(!confirm('¿Limpiar TODAS las asignaciones del período? ('+dates.length+' días, todos los operadores)'))return;
+  if(!confirm('Limpiar TODAS las asignaciones del período? ('+dates.length+' días)'))return;
   const entries=[];
   dates.forEach(d=>{OPS.forEach(op=>{setArr(d.getFullYear(),d.getMonth(),d.getDate(),op.id,[]);setH(d.getFullYear(),d.getMonth(),d.getDate(),op.id,{inicio:'',fin:''});entries.push({y:d.getFullYear(),m:d.getMonth(),d:d.getDate(),opId:op.id});});});
   await saveBatch(entries);renderC(true);closeRP();showToast('Período limpiado');
@@ -1223,6 +1235,48 @@ document.addEventListener('keydown',function(e){
   if(document.getElementById('rp').classList.contains('on')){closeRP();return;}
   if(document.getElementById('panel').classList.contains('on')){closeP();return;}
 });
+
+// ── TEAM MANAGEMENT ──
+const OP_COLORS=[{bg:'#C6EFCE',tc:'#0F6E56'},{bg:'#DDEBF7',tc:'#0C447C'},{bg:'#FFF2CC',tc:'#633806'},{bg:'#FCE4D6',tc:'#712B13'},{bg:'#E2EFDA',tc:'#3B6D11'},{bg:'#EDE8FC',tc:'#3C3489'},{bg:'#FCE8F3',tc:'#72243E'},{bg:'#E8F4FC',tc:'#185FA5'},{bg:'#FEF3C7',tc:'#92400E'},{bg:'#DBEAFE',tc:'#1E40AF'},{bg:'#FCE7F3',tc:'#9D174D'},{bg:'#D1FAE5',tc:'#065F46'}];
+
+async function loadTeamDB(){
+  try{const{data,error}=await db.from('equipo').select('*');if(error||!data||!data.length)return;const team=data.sort((a,b)=>(a.orden||0)-(b.orden||0)).map(r=>({id:r.id,name:r.nombre,short:r.short||r.nombre.split(' ')[0],init:r.init,bg:r.color_bg,tc:r.color_tc}));OPS.splice(0,OPS.length,...team);}catch(e){console.warn('loadTeam:',e);}
+}
+async function saveTeamDB(){
+  setSyncing('saving');
+  try{
+    const rows=OPS.map((op,i)=>({id:op.id,nombre:op.name,short:op.short||op.name.split(' ')[0],init:op.init,color_bg:op.bg,color_tc:op.tc,orden:i}));
+    const{error}=await db.from('equipo').upsert(rows,{onConflict:'id'});
+    if(error)throw error;
+    const ids=OPS.map(op=>op.id);
+    if(ids.length)await db.from('equipo').delete().not('id','in','('+ids.map(id=>"'"+id+"'").join(',')+')');
+    setSyncing('ok');showToast('Equipo guardado');
+  }catch(e){console.error(e);setSyncing('error');showToast('Error: '+e.message);}
+}
+function openTeam(){renderTeam();const tp=document.getElementById('team-panel');tp.style.right='0';document.getElementById('ov').classList.add('on');document.getElementById('ov').onclick=closeTeam;}
+function closeTeam(){document.getElementById('team-panel').style.right='-460px';document.getElementById('ov').classList.remove('on');}
+async function saveTeamAndClose(){await saveTeamDB();localStorage.setItem('kashio_team',JSON.stringify(OPS));closeTeam();setTimeout(()=>{renderC(true);renderLeg();},100);}
+function renderTeam(){
+  let h='';
+  OPS.forEach((op,i)=>{
+    h+='<div style="border:1px solid #E2E6ED;border-left:4px solid '+op.tc+';border-radius:8px;padding:12px 14px;margin-bottom:8px;background:#FFFFFF">';
+    h+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:36px;height:36px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700">'+op.init+'</div><div style="flex:1;font-size:10px;color:#8896A7;font-weight:600;text-transform:uppercase">Integrante '+(i+1)+'</div>';
+    if(OPS.length>1)h+='<button onclick="removeOp('+i+')" style="background:none;border:1px solid #F7C1C1;border-radius:6px;padding:4px 9px;cursor:pointer;color:#A32D2D;font-size:10px;font-family:inherit"><i class="ti ti-trash"></i> Eliminar</button>';
+    h+='</div>';
+    h+='<div style="display:grid;grid-template-columns:1fr 80px;gap:8px;margin-bottom:10px">';
+    h+='<div><div style="font-size:10px;color:#8896A7;margin-bottom:3px;font-weight:600;text-transform:uppercase">Nombre completo</div>';
+    h+='<input style="width:100%;font-size:12px;padding:7px 9px;border-radius:6px;border:1px solid #E2E6ED;background:#FAFAFA;color:#0F1923;font-family:inherit" value="'+op.name+'" onchange="OPS['+i+'].name=this.value;OPS['+i+'].short=this.value.split(\" \")[0];renderTeam()"></div>';
+    h+='<div><div style="font-size:10px;color:#8896A7;margin-bottom:3px;font-weight:600;text-transform:uppercase">Iniciales</div>';
+    h+='<input style="width:100%;font-size:13px;font-weight:700;padding:7px 9px;border-radius:6px;border:1px solid #E2E6ED;background:#FAFAFA;color:'+op.tc+';font-family:inherit;text-align:center" maxlength="2" value="'+op.init+'" onchange="OPS['+i+'].init=this.value.toUpperCase().slice(0,2);renderTeam()"></div></div>';
+    h+='<div><div style="font-size:10px;color:#8896A7;margin-bottom:6px;font-weight:600;text-transform:uppercase">Color</div><div style="display:flex;gap:6px;flex-wrap:wrap">';
+    OP_COLORS.forEach((c,ci)=>{const sel2=(op.bg===c.bg);h+='<div onclick="OPS['+i+'].bg='+JSON.stringify(c.bg)+';OPS['+i+'].tc='+JSON.stringify(c.tc)+';renderTeam()" style="width:26px;height:26px;border-radius:50%;background:'+c.bg+';border:2.5px solid '+(sel2?c.tc:'transparent')+';cursor:pointer"></div>';});       h+='</div></div></div>';
+  });
+  h+='<button onclick="addOp()" style="width:100%;padding:10px;border-radius:8px;border:2px dashed #CDD2DB;background:none;cursor:pointer;font-size:12px;color:#8896A7;font-family:inherit">+ Agregar integrante</button>';
+  document.getElementById('team-body').innerHTML=h;
+}
+function addOp(){const i=OPS.length%OP_COLORS.length;const n=OPS.length+1;OPS.push({id:'op'+Date.now(),name:'Operador '+n,short:'Op'+n,init:'O'+n,bg:OP_COLORS[i].bg,tc:OP_COLORS[i].tc});renderTeam();}
+function removeOp(i){if(OPS.length<=1){alert('Debe haber al menos un integrante.');return;}if(!confirm('¿Eliminar a '+OPS[i].name+'?'))return;OPS.splice(i,1);renderTeam();}
+
 loadAll();
 </script>
 </body>
