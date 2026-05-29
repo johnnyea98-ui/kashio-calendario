@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kashio Payment Operations<\/title>
+<title>Kashio Payment Operations</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -435,147 +435,147 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .loading-screen.hide{display:none}
 .spinner{width:32px;height:32px;border:3px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-<\/style>
-<\/head>
+</style>
+</head>
 <body>
 
 <div class="loading-screen" id="loading">
-  <div class="spinner"><\/div>
-  <div style="font-size:13px;color:var(--text3)">Cargando Kashio Ops...<\/div>
-<\/div>
+  <div class="spinner"></div>
+  <div style="font-size:13px;color:var(--text3)">Cargando Kashio Ops...</div>
+</div>
 
 <header class="app-header">
-  <div class="logo"><span class="logo-badge">K<\/span>Kashio <span style="color:var(--text3);font-weight:400;margin-left:2px">Payment Ops<\/span><\/div>
-  <div style="height:20px;width:1px;background:var(--border);margin:0 4px"><\/div>
-  <span style="font-size:11px;color:var(--text3)">Módulo de Turnos<\/span>
-  <div class="sync-indicator"><div class="sync-dot" id="sync-dot"><\/div><span id="sync-text">Sincronizado<\/span><\/div>
-<\/header>
+  <div class="logo"><span class="logo-badge">K</span>Kashio <span style="color:var(--text3);font-weight:400;margin-left:2px">Payment Ops</span></div>
+  <div style="height:20px;width:1px;background:var(--border);margin:0 4px"></div>
+  <span style="font-size:11px;color:var(--text3)">Módulo de Turnos</span>
+  <div class="sync-indicator"><div class="sync-dot" id="sync-dot"></div><span id="sync-text">Sincronizado</span></div>
+</header>
 
 <main class="app-main">
   <div class="toolbar">
     <div style="display:flex;align-items:center;gap:4px">
-      <button class="btn icon" onclick="chM(-1)"><i class="ti ti-chevron-left"><\/i><\/button>
-      <span class="month-title" id="mtitle"><\/span>
-      <button class="btn icon" onclick="chM(1)"><i class="ti ti-chevron-right"><\/i><\/button>
-      <button class="btn" onclick="goT()">Hoy<\/button>
-    <\/div>
-    <button class="btn green" onclick="openRP()"><i class="ti ti-calendar-event"><\/i> Asignar por rango<\/button>
-    <button class="btn blue" onclick="openAI()"><i class="ti ti-sparkles"><\/i> Rotación FDS<\/button>
-    <button class="btn purple" onclick="openGP()"><i class="ti ti-layout-list"><\/i> Grupos y tareas<\/button>
-    <button class="btn" onclick="openTeam()" style="color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-users"><\/i> Equipo<\/button>
+      <button class="btn icon" onclick="chM(-1)"><i class="ti ti-chevron-left"></i></button>
+      <span class="month-title" id="mtitle"></span>
+      <button class="btn icon" onclick="chM(1)"><i class="ti ti-chevron-right"></i></button>
+      <button class="btn" onclick="goT()">Hoy</button>
+    </div>
+    <button class="btn green" onclick="openRP()"><i class="ti ti-calendar-event"></i> Asignar por rango</button>
+    <button class="btn blue" onclick="openAI()"><i class="ti ti-sparkles"></i> Rotación FDS</button>
+    <button class="btn purple" onclick="openGP()"><i class="ti ti-layout-list"></i> Grupos y tareas</button>
+    <button class="btn" onclick="openTeam()" style="color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-users"></i> Equipo</button>
     <div class="vtabs" style="margin-left:auto">
-      <button class="vtab on" id="tm" onclick="sv('month')">Mes<\/button>
-      <button class="vtab" id="tw" onclick="sv('week')">Semana<\/button>
-    <\/div>
-    <button class="btn" id="export-btn" onclick="exportWeekExcel()" style="display:none;color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-file-spreadsheet"><\/i> Exportar semana<\/button>
-  <\/div>
+      <button class="vtab on" id="tm" onclick="sv('month')">Mes</button>
+      <button class="vtab" id="tw" onclick="sv('week')">Semana</button>
+    </div>
+    <button class="btn" id="export-btn" onclick="exportWeekExcel()" style="display:none;color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-file-spreadsheet"></i> Exportar semana</button>
+  </div>
 
-  <div class="legend" id="leg"><\/div>
-  <div id="cal"><\/div>
-<\/main>
+  <div class="legend" id="leg"></div>
+  <div id="cal"></div>
+</main>
 
-<div class="ov" id="ov"><\/div>
-<div class="toast" id="toast"><\/div>
+<div class="ov" id="ov"></div>
+<div class="toast" id="toast"></div>
 
 <!-- Day panel -->
 <div class="panel" id="panel">
-  <div class="ph"><button class="pc" onclick="closeP()"><i class="ti ti-x"><\/i><\/button><div class="pt" id="pt"><\/div><div class="ps" id="ps"><\/div><\/div>
-  <div class="pb" id="pb"><\/div>
-  <div class="pf"><button class="savebtn" onclick="saveAndClose()"><i class="ti ti-check"><\/i> Guardar y cerrar<\/button><button class="clearbtn" id="clear-day-btn" style="display:none"><\/button><\/div>
-<\/div>
+  <div class="ph"><button class="pc" onclick="closeP()"><i class="ti ti-x"></i></button><div class="pt" id="pt"></div><div class="ps" id="ps"></div></div>
+  <div class="pb" id="pb"></div>
+  <div class="pf"><button class="savebtn" onclick="saveAndClose()"><i class="ti ti-check"></i> Guardar y cerrar</button><button class="clearbtn" id="clear-day-btn" style="display:none"></button></div>
+</div>
 
 <!-- Range panel -->
 <div class="rp" id="rp">
   <div class="rp-hd">
-    <button class="pc" style="left:14px;right:auto" onclick="closeRP()"><i class="ti ti-x"><\/i><\/button>
+    <button class="pc" style="left:14px;right:auto" onclick="closeRP()"><i class="ti ti-x"></i></button>
     <div style="padding-left:32px">
-      <div class="pt"><i class="ti ti-calendar-event" style="color:var(--green)"><\/i> Asignar por rango<\/div>
-      <div class="ps">Selecciona el período, operadores y grupos en un solo paso<\/div>
-    <\/div>
-  <\/div>
+      <div class="pt"><i class="ti ti-calendar-event" style="color:var(--green)"></i> Asignar por rango</div>
+      <div class="ps">Selecciona el período, operadores y grupos en un solo paso</div>
+    </div>
+  </div>
   <div class="rp-bd">
 
     <!-- Visual date range picker -->
     <div>
-      <div class="sl">1 — Selecciona el período<\/div>
+      <div class="sl">1 — Selecciona el período</div>
       <div class="range-cal-wrap">
         <div class="rc-header">
-          <button class="rc-nav" onclick="rcPrev()"><i class="ti ti-chevron-left"><\/i><\/button>
-          <span class="rc-month" id="rc-month-title"><\/span>
-          <button class="rc-nav" onclick="rcNext()"><i class="ti ti-chevron-right"><\/i><\/button>
-        <\/div>
-        <div class="rc-grid" id="rc-grid"><\/div>
+          <button class="rc-nav" onclick="rcPrev()"><i class="ti ti-chevron-left"></i></button>
+          <span class="rc-month" id="rc-month-title"></span>
+          <button class="rc-nav" onclick="rcNext()"><i class="ti ti-chevron-right"></i></button>
+        </div>
+        <div class="rc-grid" id="rc-grid"></div>
         <div class="range-info" id="range-info">
-          <span style="color:var(--text3)">Haz clic en el día de inicio y luego en el día final<\/span>
-        <\/div>
-      <\/div>
+          <span style="color:var(--text3)">Haz clic en el día de inicio y luego en el día final</span>
+        </div>
+      </div>
       <div class="chk-opts" style="margin-top:10px">
-        <label class="chk-opt"><input type="checkbox" id="r-skip-we" onchange="updatePreview()"> Omitir fines de semana<\/label>
-        <label class="chk-opt"><input type="checkbox" id="r-overwrite" checked> Sobrescribir existentes<\/label>
-      <\/div>
-    <\/div>
+        <label class="chk-opt"><input type="checkbox" id="r-skip-we" onchange="updatePreview()"> Omitir fines de semana</label>
+        <label class="chk-opt"><input type="checkbox" id="r-overwrite" checked> Sobrescribir existentes</label>
+      </div>
+    </div>
 
     <!-- Operators + hours -->
     <div>
-      <div class="sl">2 — Operadores y horario<\/div>
-      <div id="r-ops"><\/div>
+      <div class="sl">2 — Operadores y horario</div>
+      <div id="r-ops"></div>
       <div style="display:flex;gap:5px;margin-top:6px">
-        <button class="btn" style="font-size:10px" onclick="rSelAll()"><i class="ti ti-users"><\/i> Todos<\/button>
-        <button class="btn" style="font-size:10px" onclick="rClrAll()">Ninguno<\/button>
-      <\/div>
-    <\/div>
+        <button class="btn" style="font-size:10px" onclick="rSelAll()"><i class="ti ti-users"></i> Todos</button>
+        <button class="btn" style="font-size:10px" onclick="rClrAll()">Ninguno</button>
+      </div>
+    </div>
 
     <!-- Groups -->
     <div>
-      <div class="sl">3 — Grupos a asignar<\/div>
-      <div class="g-sel-wrap" id="r-assign-body"><\/div>
-    <\/div>
+      <div class="sl">3 — Grupos a asignar</div>
+      <div class="g-sel-wrap" id="r-assign-body"></div>
+    </div>
 
     <!-- Preview -->
     <div>
-      <div class="sl">Vista previa<\/div>
-      <div class="preview-box" id="r-preview">Completa los pasos para ver el resumen.<\/div>
-    <\/div>
-  <\/div>
+      <div class="sl">Vista previa</div>
+      <div class="preview-box" id="r-preview">Completa los pasos para ver el resumen.</div>
+    </div>
+  </div>
   <div class="rp-ft">
-    <button class="apply-btn" onclick="applyRange()"><i class="ti ti-check"><\/i> Aplicar asignación<\/button>
+    <button class="apply-btn" onclick="applyRange()"><i class="ti ti-check"></i> Aplicar asignación</button>
     <div style="display:flex;gap:6px">
-      <button class="clear-btn" style="flex:1" onclick="clearRange()"><i class="ti ti-trash"><\/i> Borrar asignaciones del rango<\/button>
-      <button class="clear-btn" style="flex:1;color:#F56565;border-color:#5A2020" onclick="clearAllRange()"><i class="ti ti-circle-x"><\/i> Limpiar todo<\/button>
-    <\/div>
-  <\/div>
-<\/div>
+      <button class="clear-btn" style="flex:1" onclick="clearRange()"><i class="ti ti-trash"></i> Borrar asignaciones del rango</button>
+      <button class="clear-btn" style="flex:1;color:#F56565;border-color:#5A2020" onclick="clearAllRange()"><i class="ti ti-circle-x"></i> Limpiar todo</button>
+    </div>
+  </div>
+</div>
 
 <!-- AI panel -->
 <div class="aip" id="aip">
-  <div class="ph"><button class="pc" style="left:14px;right:auto" onclick="closeAI()"><i class="ti ti-x"><\/i><\/button><div style="padding-left:32px"><div class="pt"><i class="ti ti-sparkles" style="color:var(--blue)"><\/i> Asistente rotación FDS<\/div><div class="ps">Historial y recomendación por sábado y domingo<\/div><\/div><\/div>
-  <div style="padding:14px 18px;flex:1;overflow-y:auto" id="ai-body"><\/div>
-<\/div>
+  <div class="ph"><button class="pc" style="left:14px;right:auto" onclick="closeAI()"><i class="ti ti-x"></i></button><div style="padding-left:32px"><div class="pt"><i class="ti ti-sparkles" style="color:var(--blue)"></i> Asistente rotación FDS</div><div class="ps">Historial y recomendación por sábado y domingo</div></div></div>
+  <div style="padding:14px 18px;flex:1;overflow-y:auto" id="ai-body"></div>
+</div>
 
 <!-- Groups panel -->
 <div class="gp" id="gp">
-  <div class="gp-hd"><button class="pc" onclick="closeGP()"><i class="ti ti-x"><\/i><\/button><div class="pt"><i class="ti ti-layout-list"><\/i> Grupos y tareas<\/div><div class="ps">Edita nombres, arrastra tareas para reordenar, copia o mueve entre grupos<\/div><\/div>
-  <div class="gp-bd" id="gb"><\/div>
-<\/div>
+  <div class="gp-hd"><button class="pc" onclick="closeGP()"><i class="ti ti-x"></i></button><div class="pt"><i class="ti ti-layout-list"></i> Grupos y tareas</div><div class="ps">Edita nombres, arrastra tareas para reordenar, copia o mueve entre grupos</div></div>
+  <div class="gp-bd" id="gb"></div>
+</div>
 
 <!-- Task detail panel -->
 <div class="tp" id="tp">
-  <div class="tp-hd"><button class="pc" onclick="closeTP()"><i class="ti ti-x"><\/i><\/button><div id="tp-badge-wrap"><\/div><input class="tp-name" id="tp-name" placeholder="Nombre de la tarea" onchange="saveTaskName()"><div style="display:flex;align-items:center;gap:5px;margin-top:9px;flex-wrap:wrap" id="tp-freq-wrap"><\/div><\/div>
-  <div class="tp-bd" id="tp-body"><\/div>
-<\/div>
+  <div class="tp-hd"><button class="pc" onclick="closeTP()"><i class="ti ti-x"></i></button><div id="tp-badge-wrap"></div><input class="tp-name" id="tp-name" placeholder="Nombre de la tarea" onchange="saveTaskName()"><div style="display:flex;align-items:center;gap:5px;margin-top:9px;flex-wrap:wrap" id="tp-freq-wrap"></div></div>
+  <div class="tp-bd" id="tp-body"></div>
+</div>
 
 <!-- Team panel -->
 <div class="panel" id="team-panel" style="width:440px;right:-460px;z-index:102;transition:right .22s cubic-bezier(.4,0,.2,1)">
   <div class="ph" style="background:#FFFFFF;border-color:#E2E6ED">
-    <button class="pc" style="border-color:#E2E6ED;color:#8896A7" onclick="closeTeam()"><i class="ti ti-x"><\/i><\/button>
-    <div class="pt" style="color:#0F1923"><i class="ti ti-users" style="color:#0F6E56"><\/i> Gestión del equipo<\/div>
-    <div class="ps" style="color:#8896A7">Edita nombres, iniciales y colores. Agrega o elimina integrantes.<\/div>
-  <\/div>
-  <div class="pb" id="team-body" style="background:#F5F6FA;overflow-y:auto"><\/div>
+    <button class="pc" style="border-color:#E2E6ED;color:#8896A7" onclick="closeTeam()"><i class="ti ti-x"></i></button>
+    <div class="pt" style="color:#0F1923"><i class="ti ti-users" style="color:#0F6E56"></i> Gestión del equipo</div>
+    <div class="ps" style="color:#8896A7">Edita nombres, iniciales y colores. Agrega o elimina integrantes.</div>
+  </div>
+  <div class="pb" id="team-body" style="background:#F5F6FA;overflow-y:auto"></div>
   <div class="pf" style="background:#FFFFFF;border-color:#E2E6ED">
-    <button class="savebtn" onclick="saveTeamAndClose()" style="background:#0F6E56"><i class="ti ti-check"><\/i> Guardar cambios<\/button>
-  <\/div>
-<\/div>
+    <button class="savebtn" onclick="saveTeamAndClose()" style="background:#0F6E56"><i class="ti ti-check"></i> Guardar cambios</button>
+  </div>
+</div>
 <script>
 
 const SUPA_URL='https://csthgljcamrkklmnhcqz.supabase.co';
@@ -593,7 +593,7 @@ let OPS=[
   {id:'diana',  name:'Diana',         short:'Diana', init:'DI', bg:'var(--diana)',   tc:'var(--diana-t)'},
 ];
 const TIME_OPTS=(()=>{const o=[];for(let h=0;h<24;h++)for(let m of[0,30])o.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);return o;})();
-function timeSelect(cls,val,onchange,style=''){return '<select class="'+cls+'" style="'+style+'" onchange="'+onchange+'" onclick="event.stopPropagation()">'+TIME_OPTS.map(t=>'<option value="'+t+'"'+(t===val?' selected':'')+'>'+t+'<\/option>').join('')+'<\/select>';}
+function timeSelect(cls,val,onchange,style=''){return '<select class="'+cls+'" style="'+style+'" onchange="'+onchange+'" onclick="event.stopPropagation()">'+TIME_OPTS.map(t=>'<option value="'+t+'"'+(t===val?' selected':'')+'>'+t+'</option>').join('')+'</select>';}
 const FREQS=['c/hora','1×día','Inicio jornada','Cierre jornada','Ocasional','Sábados','Domingos'];
 async function loadTeamDB(){
   try{
@@ -694,11 +694,11 @@ async function loadAll(){
     console.error('loadAll error:',e);
     const msg=e.message||String(e);
     document.getElementById('loading').innerHTML=`<div style="color:#F56565;font-size:13px;text-align:center;padding:20px;max-width:400px">
-      <i class="ti ti-alert-circle" style="font-size:32px"><\/i><br><br>
-      <b>Error al conectar<\/b><br>
-      <div style="font-size:11px;color:#8896A7;margin:8px 0;word-break:break-all">${msg}<\/div>
-      <button onclick="loadAll()" style="margin-top:12px;padding:8px 16px;background:#185FA5;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">Reintentar<\/button>
-    <\/div>`;
+      <i class="ti ti-alert-circle" style="font-size:32px"></i><br><br>
+      <b>Error al conectar</b><br>
+      <div style="font-size:11px;color:#8896A7;margin:8px 0;word-break:break-all">${msg}</div>
+      <button onclick="loadAll()" style="margin-top:12px;padding:8px 16px;background:#185FA5;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">Reintentar</button>
+    </div>`;
   }
 }
 async function loadAsgn(y,m){
@@ -755,7 +755,7 @@ function renderHoursBar(){
     const pct=Math.min(total/TARGET*100,100);
     const col=total>=TARGET?'var(--green)':total>=TARGET*.6?'var(--amber)':'var(--blue)';
     const vcls=total>=TARGET?'style="color:var(--green)"':total>=TARGET*.6?'style="color:var(--amber)"':'';
-    html+=`<div class="op-h"><div class="op-h-name" title="${op.name}">${op.short}<\/div><div class="op-h-track"><div class="op-h-fill" style="width:${pct}%;background:${col}"><\/div><\/div><div class="op-h-val" ${vcls}>${total}h<\/div><\/div>`;
+    html+=`<div class="op-h"><div class="op-h-name" title="${op.name}">${op.short}</div><div class="op-h-track"><div class="op-h-fill" style="width:${pct}%;background:${col}"></div></div><div class="op-h-val" ${vcls}>${total}h</div></div>`;
   });
   document.getElementById('hours-content').innerHTML=html;
 }
@@ -764,10 +764,10 @@ function getWeekOfToday(){const d=new Date(today);const day=d.getDay();const mon
 // LEGEND
 function renderLeg(){
   document.getElementById('leg').innerHTML=
-    groups.filter(g=>!['off','vac'].includes(g.id)).map(g=>`<div class="li"><div class="ld" style="background:${g.bg};width:12px;height:12px;border:1.5px solid ${g.tc}"><\/div><span style="color:${g.tc};font-weight:500">${g.badge}<\/span><\/div>`).join('')+
-    `<div class="li"><div class="ld" style="background:#2A3020"><\/div><span>Desc.<\/span><\/div>
-     <div class="li"><div class="ld" style="background:#2A1525"><\/div><span>Vac.<\/span><\/div>
-     <div class="li" style="margin-left:auto;font-size:10px;color:var(--text3)"><i class="ti ti-click"><\/i> Clic en día para asignar<\/div>`;
+    groups.filter(g=>!['off','vac'].includes(g.id)).map(g=>`<div class="li"><div class="ld" style="background:${g.bg};width:12px;height:12px;border:1.5px solid ${g.tc}"></div><span style="color:${g.tc};font-weight:500">${g.badge}</span></div>`).join('')+
+    `<div class="li"><div class="ld" style="background:#2A3020"></div><span>Desc.</span></div>
+     <div class="li"><div class="ld" style="background:#2A1525"></div><span>Vac.</span></div>
+     <div class="li" style="margin-left:auto;font-size:10px;color:var(--text3)"><i class="ti ti-click"></i> Clic en día para asignar</div>`;
 }
 
 // CALENDAR
@@ -778,7 +778,7 @@ function dayChipsHtml(y,m,d){
     const firstG=gG(arr[0]);if(!firstG)return;
     const badges=arr.map(gid=>{const g=gG(gid);return g?g.badge:''}).filter(Boolean).join(' ');
     const hh=calcH(getH(y,m,d,op.id).inicio,getH(y,m,d,op.id).fin);
-    h+=`<div class="chip" style="background:${firstG.bg};color:${firstG.tc}" onclick="event.stopPropagation();openP('${dk(y,m,d)}','${op.id}')" title="${op.name}: ${arr.map(gid=>gG(gid)?.name||gid).join(', ')}"><span style="font-weight:700;flex-shrink:0">${op.init}<\/span><span style="opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${badges}<\/span>${hh>0?`<span class="chip-h">${hh}h<\/span>`:''}<\/div>`;
+    h+=`<div class="chip" style="background:${firstG.bg};color:${firstG.tc}" onclick="event.stopPropagation();openP('${dk(y,m,d)}','${op.id}')" title="${op.name}: ${arr.map(gid=>gG(gid)?.name||gid).join(', ')}"><span style="font-weight:700;flex-shrink:0">${op.init}</span><span style="opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${badges}</span>${hh>0?`<span class="chip-h">${hh}h</span>`:''}</div>`;
   });
   return h;
 }
@@ -789,7 +789,7 @@ function renderMonth(){
   const dim=new Date(cy,cm+1,0).getDate();
   const dip=new Date(cy,cm,0).getDate();
   let h=`<div class="cal"><div class="cal-grid">`;
-  ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach((d,i)=>h+=`<div class="dh${i>=5?' we':''}">${d}<\/div>`);
+  ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach((d,i)=>h+=`<div class="dh${i>=5?' we':''}">${d}</div>`);
   const cells=Math.ceil((fd+dim)/7)*7;
   for(let i=0;i<cells;i++){
     let d,mo=cm,y=cy,om=false;
@@ -801,10 +801,10 @@ function renderMonth(){
     const we=col>=5;
     const isT=!om&&d===today.getDate()&&cm===today.getMonth()&&cy===today.getFullYear();
     const dks=dk(y,mo,d);
-    let chips='';if(!om){chips=dayChipsHtml(y,mo,d);if(!chips)chips=`<div class="hint">+ asignar<\/div>`;}
-    h+=`<div class="dc${om?' om':''}${we?' wec':''}${isT?' tod':''}" onclick="openP('${dks}',null)"><div class="dn">${d}<\/div>${chips}<\/div>`;
+    let chips='';if(!om){chips=dayChipsHtml(y,mo,d);if(!chips)chips=`<div class="hint">+ asignar</div>`;}
+    h+=`<div class="dc${om?' om':''}${we?' wec':''}${isT?' tod':''}" onclick="openP('${dks}',null)"><div class="dn">${d}</div>${chips}</div>`;
   }
-  return h+`<\/div><\/div>`;
+  return h+`</div></div>`;
 }
 function wkDates2(){
   // Find Monday of the current week in view
@@ -818,7 +818,7 @@ function wkDates2(){
 function renderWeek(){
   const dates=wkDates2();
   const WN=['Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b','Dom'];
-  let hoursHtml='<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;margin-bottom:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><span style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;flex-shrink:0"><i class="ti ti-clock"><\/i> Horas semana<\/span>';
+  let hoursHtml='<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;margin-bottom:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><span style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;flex-shrink:0"><i class="ti ti-clock"></i> Horas semana</span>';
   OPS.forEach(op=>{
     let total=0;
     dates.forEach(d=>{const h2=getH(d.getFullYear(),d.getMonth(),d.getDate(),op.id);total+=calcH(h2.inicio,h2.fin);});
@@ -829,26 +829,26 @@ function renderWeek(){
     const vcol=over?'color:var(--red)':exact?'color:var(--green)':total>=TARGET*0.75?'color:var(--amber)':'';
     const lbl=over?' ⚠':exact?' ✓':'';
     hoursHtml+='<div style="display:flex;align-items:center;gap:6px;flex:1;min-width:130px">'
-      +'<div style="width:22px;height:22px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0">'+op.init+'<\/div>'
-      +'<div style="flex:1;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+col+';border-radius:3px"><\/div><\/div>'
-      +'<span style="font-size:11px;font-weight:600;min-width:42px;'+vcol+'">'+total+'h'+lbl+'<\/span>'
-      +'<\/div>';
+      +'<div style="width:22px;height:22px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0">'+op.init+'</div>'
+      +'<div style="flex:1;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+col+';border-radius:3px"></div></div>'
+      +'<span style="font-size:11px;font-weight:600;min-width:42px;'+vcol+'">'+total+'h'+lbl+'</span>'
+      +'</div>';
   });
-  hoursHtml+='<span style="font-size:10px;color:var(--text3);flex-shrink:0">Meta <b style="color:var(--text)">48h<\/b><\/span><\/div>';
+  hoursHtml+='<span style="font-size:10px;color:var(--text3);flex-shrink:0">Meta <b style="color:var(--text)">48h</b></span></div>';
   let h='<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">'
-    +'<button class="btn icon" onclick="woff--;renderC(true)"><i class="ti ti-chevron-left"><\/i><\/button>'
-    +'<span style="font-size:12px;color:var(--text3)">'+dates[0].getDate()+'/'+(dates[0].getMonth()+1)+' \u2013 '+dates[6].getDate()+'/'+(dates[6].getMonth()+1)+'<\/span>'
-    +'<button class="btn icon" onclick="woff++;renderC(true)"><i class="ti ti-chevron-right"><\/i><\/button>'
-    +'<\/div>'+hoursHtml;
-  h+='<div class="wg"><div class="wh">Op.<\/div>';
+    +'<button class="btn icon" onclick="woff--;renderC(true)"><i class="ti ti-chevron-left"></i></button>'
+    +'<span style="font-size:12px;color:var(--text3)">'+dates[0].getDate()+'/'+(dates[0].getMonth()+1)+' \u2013 '+dates[6].getDate()+'/'+(dates[6].getMonth()+1)+'</span>'
+    +'<button class="btn icon" onclick="woff++;renderC(true)"><i class="ti ti-chevron-right"></i></button>'
+    +'</div>'+hoursHtml;
+  h+='<div class="wg"><div class="wh">Op.</div>';
   dates.forEach((d,i)=>{
     const isT=d.getDate()===today.getDate()&&d.getMonth()===today.getMonth()&&d.getFullYear()===today.getFullYear();
     const we=i>=5;
-    h+='<div class="wh'+(we?' we':'')+'" style="'+(isT?'color:var(--amber);font-weight:700':'')+'">'+WN[i]+' '+d.getDate()+'<\/div>';
+    h+='<div class="wh'+(we?' we':'')+'" style="'+(isT?'color:var(--amber);font-weight:700':'')+'">'+WN[i]+' '+d.getDate()+'</div>';
   });
-  h+='<\/div>';
+  h+='</div>';
   OPS.forEach(op=>{
-    h+='<div class="wg"><div class="wop"><div class="av" style="background:'+op.bg+';color:'+op.tc+'">'+op.init+'<\/div><span>'+op.short+'<\/span><\/div>';
+    h+='<div class="wg"><div class="wop"><div class="av" style="background:'+op.bg+';color:'+op.tc+'">'+op.init+'</div><span>'+op.short+'</span></div>';
     dates.forEach(d=>{
       const y=d.getFullYear(),mo=d.getMonth(),day=d.getDate(),dks=dk(y,mo,day);
       const arr=getArr(y,mo,day,op.id),wec2=d.getDay()===0||d.getDay()===6;
@@ -857,11 +857,11 @@ function renderWeek(){
       const hh=calcH(getH(y,mo,day,op.id).inicio,getH(y,mo,day,op.id).fin);
       const wec=d.getDay()===0||d.getDay()===6;
       h+='<div class="wdc'+(wec?' wec':'')+'" style="'+(firstG?'background:'+firstG.bg+';color:'+firstG.tc:'')+'" onclick="openP(\''+dks+'\',\''+op.id+'\')">'
-        +(firstG?'<span class="wbadge" style="background:'+firstG.bg+';color:'+firstG.tc+'">'+badges+'<\/span>':'<span style="font-size:16px;color:var(--border2)">+<\/span>')
-        +(hh>0?'<span class="w-hours">'+hh+'h<\/span>':'')
-        +'<\/div>';
+        +(firstG?'<span class="wbadge" style="background:'+firstG.bg+';color:'+firstG.tc+'">'+badges+'</span>':'<span style="font-size:16px;color:var(--border2)">+</span>')
+        +(hh>0?'<span class="w-hours">'+hh+'h</span>':'')
+        +'</div>';
     });
-    h+='<\/div>';
+    h+='</div>';
   });
   return h;
 }
@@ -930,21 +930,21 @@ function openP(dks,opId){
       if(fg&&fg.hInicio){h={inicio:fg.hInicio,fin:fg.hFin||'18:00'};setH(y,m,d,op.id,h);}
     }
     const hh=calcH(h.inicio,h.fin);
-    const chips=arr.length?arr.map(gid=>{const g=gG(gid);return g?`<span class="gchip" style="background:${g.bg};color:${g.tc}">${g.badge} ${g.name}<span class="x" onclick="toggleG('${dks}','${op.id}','${gid}')">×<\/span><\/span>`:''}).join(''):`<span class="gchip-empty">Sin grupos — elige abajo<\/span>`;
-    const btns=groups.map(g=>{const s=sel.has(g.id);return`<button class="gadd-btn${s?' sel':''}" style="${s?`background:${g.bg};color:${g.tc};border-color:${g.tc};border-style:solid`:''}" onclick="toggleG('${dks}','${op.id}','${g.id}')">${g.badge} ${g.name}<\/button>`;}).join('');
-    const prev=arr.map(gid=>{const g=gG(gid);if(!g||!g.tasks.length)return'';return g.tasks.map((t,ti)=>{const td2=taskDetail[gid]&&taskDetail[gid][ti];const hasD=td2&&(td2.desc||td2.steps.length||td2.comments.length);return`<span class="ttag" style="background:${g.bg};color:${g.tc}" onclick="openTP('${gid}',${ti})">${t}${hasD?' <i class="ti ti-file-text" style="font-size:9px"><\/i>':' <i class="ti ti-edit" style="font-size:9px;opacity:.4"><\/i>'}<\/span>`;}).join('');}).join('');
-    return`<div class="orow" id="orow-${op.id}"><div class="ohead"><div class="av-m" style="background:${op.bg};color:${op.tc}">${op.init}<\/div><div><div class="oname">${op.name}<\/div><\/div>${arr.length?`<span style="margin-left:auto;font-size:9px;background:var(--surface3);padding:2px 6px;border-radius:4px;color:var(--text3);border:1px solid var(--border)">${arr.map(gid=>gG(gid)?.badge||gid).join(' ')}<\/span>`:''}<\/div>
-    <div class="time-row"><span class="time-label"><i class="ti ti-clock"><\/i> Horario<\/span>${timeSelect('time-inp',h.inicio||'09:00','updDayH(\'' + dks + '\',\'' + op.id + '\',\'inicio\',this.value)')}<span style="font-size:11px;color:var(--text3)">→<\/span>${timeSelect('time-inp',h.fin||'18:00','updDayH(\'' + dks + '\',\'' + op.id + '\',\'fin\',this.value)')}<span class="time-hrs${hh>0?' ok':''}" id="hrs-${op.id}">${hh>0?hh+'h':''}<\/span><\/div>
-    <div class="sl">Grupos asignados<\/div><div class="gchips" id="chips-${op.id}">${chips}<\/div><div class="sl">Añadir / quitar<\/div><div class="gadd" id="gadd-${op.id}">${btns}<\/div>${prev?`<div class="sl">Tareas<\/div><div class="task-preview" id="prev-${op.id}">${prev}<\/div>`:`<div id="prev-${op.id}"><\/div>`}<\/div>`;
+    const chips=arr.length?arr.map(gid=>{const g=gG(gid);return g?`<span class="gchip" style="background:${g.bg};color:${g.tc}">${g.badge} ${g.name}<span class="x" onclick="toggleG('${dks}','${op.id}','${gid}')">×</span></span>`:''}).join(''):`<span class="gchip-empty">Sin grupos — elige abajo</span>`;
+    const btns=groups.map(g=>{const s=sel.has(g.id);return`<button class="gadd-btn${s?' sel':''}" style="${s?`background:${g.bg};color:${g.tc};border-color:${g.tc};border-style:solid`:''}" onclick="toggleG('${dks}','${op.id}','${g.id}')">${g.badge} ${g.name}</button>`;}).join('');
+    const prev=arr.map(gid=>{const g=gG(gid);if(!g||!g.tasks.length)return'';return g.tasks.map((t,ti)=>{const td2=taskDetail[gid]&&taskDetail[gid][ti];const hasD=td2&&(td2.desc||td2.steps.length||td2.comments.length);return`<span class="ttag" style="background:${g.bg};color:${g.tc}" onclick="openTP('${gid}',${ti})">${t}${hasD?' <i class="ti ti-file-text" style="font-size:9px"></i>':' <i class="ti ti-edit" style="font-size:9px;opacity:.4"></i>'}</span>`;}).join('');}).join('');
+    return`<div class="orow" id="orow-${op.id}"><div class="ohead"><div class="av-m" style="background:${op.bg};color:${op.tc}">${op.init}</div><div><div class="oname">${op.name}</div></div>${arr.length?`<span style="margin-left:auto;font-size:9px;background:var(--surface3);padding:2px 6px;border-radius:4px;color:var(--text3);border:1px solid var(--border)">${arr.map(gid=>gG(gid)?.badge||gid).join(' ')}</span>`:''}</div>
+    <div class="time-row"><span class="time-label"><i class="ti ti-clock"></i> Horario</span>${timeSelect('time-inp',h.inicio||'09:00','updDayH(\'' + dks + '\',\'' + op.id + '\',\'inicio\',this.value)')}<span style="font-size:11px;color:var(--text3)">→</span>${timeSelect('time-inp',h.fin||'18:00','updDayH(\'' + dks + '\',\'' + op.id + '\',\'fin\',this.value)')}<span class="time-hrs${hh>0?' ok':''}" id="hrs-${op.id}">${hh>0?hh+'h':''}</span></div>
+    <div class="sl">Grupos asignados</div><div class="gchips" id="chips-${op.id}">${chips}</div><div class="sl">Añadir / quitar</div><div class="gadd" id="gadd-${op.id}">${btns}</div>${prev?`<div class="sl">Tareas</div><div class="task-preview" id="prev-${op.id}">${prev}</div>`:`<div id="prev-${op.id}"></div>`}</div>`;
   };
-  let b=opId?renderOp(OPS.find(o=>o.id===opId)):`<div class="sl">Asigna grupos y horario por operador<\/div>`+OPS.map(renderOp).join('');
+  let b=opId?renderOp(OPS.find(o=>o.id===opId)):`<div class="sl">Asigna grupos y horario por operador</div>`+OPS.map(renderOp).join('');
   // Build day summary (only when viewing full day, not single operator)
   let summary='';
   if(!opId){
     const assigned=OPS.filter(op=>getArr(y,m,d,op.id).length>0);
     if(assigned.length>0){
       summary='<div style="background:#F5F8FF;border:1px solid #E2E6ED;border-radius:8px;padding:12px 14px;margin-bottom:14px">';
-      summary+='<div style="font-size:10px;font-weight:600;color:#8896A7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Resumen del día<\/div>';
+      summary+='<div style="font-size:10px;font-weight:600;color:#8896A7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Resumen del día</div>';
       summary+='<div style="display:flex;flex-direction:column;gap:8px">';
       assigned.forEach(op=>{
         const arr=getArr(y,m,d,op.id);
@@ -957,35 +957,35 @@ function openP(dks,opId){
           const g=gG(gid);
           if(g&&g.tasks.length) g.tasks.forEach(t=>tasks.push({t,bg:g.bg,tc:g.tc,badge:g.badge}));
         });
-        const badges=arr.map(gid=>{const g=gG(gid);return g?'<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:'+g.bg+';color:'+g.tc+'">'+g.badge+'<\/span>':''}).join(' ');
+        const badges=arr.map(gid=>{const g=gG(gid);return g?'<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:'+g.bg+';color:'+g.tc+'">'+g.badge+'</span>':''}).join(' ');
         summary+='<div style="background:#fff;border-radius:8px;border:1px solid #E8ECF4;overflow:hidden;margin-bottom:4px">';
         // Header row
         summary+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#FAFBFF;border-bottom:1px solid #E8ECF4">';
-        summary+='<div style="width:30px;height:30px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;border:2px solid '+op.tc+'40">'+op.init+'<\/div>';
-        summary+='<div style="flex:1"><div style="font-size:12px;font-weight:600;color:#0F1923">'+op.name+'<\/div>';
-        summary+='<div style="font-size:10px;color:#8896A7;margin-top:1px">'+timeStr+'<\/div><\/div>';
-        summary+='<div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:700;color:'+(hh>0?'#185FA5':'#8896A7')+'">'+(hh>0?hh+'h':'—')+'<\/div>';
-        summary+='<div style="display:flex;gap:3px;justify-content:flex-end;margin-top:2px">'+badges+'<\/div><\/div>';
-        summary+='<\/div>';
+        summary+='<div style="width:30px;height:30px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;border:2px solid '+op.tc+'40">'+op.init+'</div>';
+        summary+='<div style="flex:1"><div style="font-size:12px;font-weight:600;color:#0F1923">'+op.name+'</div>';
+        summary+='<div style="font-size:10px;color:#8896A7;margin-top:1px">'+timeStr+'</div></div>';
+        summary+='<div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:700;color:'+(hh>0?'#185FA5':'#8896A7')+'">'+(hh>0?hh+'h':'—')+'</div>';
+        summary+='<div style="display:flex;gap:3px;justify-content:flex-end;margin-top:2px">'+badges+'</div></div>';
+        summary+='</div>';
         // Tasks list
         if(tasks.length){
           summary+='<div style="padding:6px 12px 8px">';
           tasks.forEach(({t,bg,tc,badge})=>{
             summary+='<div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid #F0F2F8">';
-            summary+='<span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:'+bg+';color:'+tc+';flex-shrink:0">'+badge+'<\/span>';
-            summary+='<span style="font-size:11px;color:#2D3748">'+t+'<\/span>';
-            summary+='<\/div>';
+            summary+='<span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:'+bg+';color:'+tc+';flex-shrink:0">'+badge+'</span>';
+            summary+='<span style="font-size:11px;color:#2D3748">'+t+'</span>';
+            summary+='</div>';
           });
-          summary+='<\/div>';
+          summary+='</div>';
         }
-        summary+='<\/div>';
+        summary+='</div>';
       });
-      summary+='<\/div><\/div>';
+      summary+='</div></div>';
     }
   }
   document.getElementById('pb').innerHTML=summary+b;
   const cb=document.getElementById('clear-day-btn');
-  if(!opId){cb.style.display='block';cb.innerHTML='<i class="ti ti-trash"><\/i> Limpiar todo el día';cb.onclick=()=>clearDay(dks);}else cb.style.display='none';
+  if(!opId){cb.style.display='block';cb.innerHTML='<i class="ti ti-trash"></i> Limpiar todo el día';cb.onclick=()=>clearDay(dks);}else cb.style.display='none';
   document.getElementById('panel').classList.add('on');
   document.getElementById('ov').classList.add('on');
   document.getElementById('ov').onclick=saveAndClose;
@@ -1031,9 +1031,9 @@ function toggleG(dks,opId,gId){
   }
   setArr(y,m,d,opId,arr);
   const sel=new Set(arr);
-  const cc=document.getElementById(`chips-${opId}`);if(cc)cc.innerHTML=arr.length?arr.map(gid=>{const g=gG(gid);return g?`<span class="gchip" style="background:${g.bg};color:${g.tc}">${g.badge} ${g.name}<span class="x" onclick="toggleG('${dks}','${opId}','${gid}')">×<\/span><\/span>`:''}).join(''):`<span class="gchip-empty">Sin grupos<\/span>`;
-  const ga=document.getElementById(`gadd-${opId}`);if(ga)ga.innerHTML=groups.map(g=>{const s=sel.has(g.id);return`<button class="gadd-btn${s?' sel':''}" style="${s?`background:${g.bg};color:${g.tc};border-color:${g.tc};border-style:solid`:''}" onclick="toggleG('${dks}','${opId}','${g.id}')">${g.badge} ${g.name}<\/button>`;}).join('');
-  const pv=document.getElementById(`prev-${opId}`);if(pv){const prev=arr.map(gid=>{const g=gG(gid);if(!g||!g.tasks.length)return'';return g.tasks.map((t,ti)=>{const td2=taskDetail[gid]&&taskDetail[gid][ti];const hasD=td2&&(td2.desc||td2.steps.length||td2.comments.length);return`<span class="ttag" style="background:${g.bg};color:${g.tc}" onclick="openTP('${gid}',${ti})">${t}${hasD?' <i class="ti ti-file-text" style="font-size:9px"><\/i>':' <i class="ti ti-edit" style="font-size:9px;opacity:.4"><\/i>'}<\/span>`;}).join('');}).join('');pv.innerHTML=prev?`<div class="sl">Tareas<\/div><div class="task-preview">${prev}<\/div>`:'';}
+  const cc=document.getElementById(`chips-${opId}`);if(cc)cc.innerHTML=arr.length?arr.map(gid=>{const g=gG(gid);return g?`<span class="gchip" style="background:${g.bg};color:${g.tc}">${g.badge} ${g.name}<span class="x" onclick="toggleG('${dks}','${opId}','${gid}')">×</span></span>`:''}).join(''):`<span class="gchip-empty">Sin grupos</span>`;
+  const ga=document.getElementById(`gadd-${opId}`);if(ga)ga.innerHTML=groups.map(g=>{const s=sel.has(g.id);return`<button class="gadd-btn${s?' sel':''}" style="${s?`background:${g.bg};color:${g.tc};border-color:${g.tc};border-style:solid`:''}" onclick="toggleG('${dks}','${opId}','${g.id}')">${g.badge} ${g.name}</button>`;}).join('');
+  const pv=document.getElementById(`prev-${opId}`);if(pv){const prev=arr.map(gid=>{const g=gG(gid);if(!g||!g.tasks.length)return'';return g.tasks.map((t,ti)=>{const td2=taskDetail[gid]&&taskDetail[gid][ti];const hasD=td2&&(td2.desc||td2.steps.length||td2.comments.length);return`<span class="ttag" style="background:${g.bg};color:${g.tc}" onclick="openTP('${gid}',${ti})">${t}${hasD?' <i class="ti ti-file-text" style="font-size:9px"></i>':' <i class="ti ti-edit" style="font-size:9px;opacity:.4"></i>'}</span>`;}).join('');}).join('');pv.innerHTML=prev?`<div class="sl">Tareas</div><div class="task-preview">${prev}</div>`:'';}
   const badge=document.querySelector(`#orow-${opId} .ohead span[style*="margin-left:auto"]`);
   if(arr.length){if(!badge){const s=document.createElement('span');s.style.cssText='margin-left:auto;font-size:9px;background:var(--surface3);padding:2px 6px;border-radius:4px;color:var(--text3);border:1px solid var(--border)';document.querySelector(`#orow-${opId} .ohead`).appendChild(s);}document.querySelector(`#orow-${opId} .ohead span[style*="margin-left:auto"]`).textContent=arr.map(gid=>gG(gid)?.badge||gid).join(' ');}else if(badge)badge.remove();
   renderC();
@@ -1052,7 +1052,7 @@ function rcRender(){
   const dip=new Date(rcYear,rcMonth,0).getDate();
   let h='';
   ['Lu','Ma','Mi','Ju','Vi','Sa','Do'].forEach((d,i)=>
-    h+=`<div class="rc-dh${i===0||i===6?' we':''}">${d}<\/div>`);
+    h+=`<div class="rc-dh${i===0||i===6?' we':''}">${d}</div>`);
   const cells=Math.ceil((fd+dim)/7)*7;
   const sT=rcStart?rcStart.getTime():null;
   const eT=rcEnd?rcEnd.getTime():null;
@@ -1065,7 +1065,7 @@ function rcRender(){
     if(i<fd){d=dip-fd+i+1;other=true;}
     else if(i>=fd+dim){d=i-fd-dim+1;other=true;}
     else d=i-fd+1;
-    if(other){h+=`<div class="rc-day rc-other">${d}<\/div>`;continue;}
+    if(other){h+=`<div class="rc-day rc-other">${d}</div>`;continue;}
     const ts=new Date(y,mo,d).getTime();
     const isToday=d===today.getDate()&&mo===today.getMonth()&&y===today.getFullYear();
     let cls='rc-day';
@@ -1073,7 +1073,7 @@ function rcRender(){
     if(sT!==null&&ts===sT) cls+=' rc-start';
     if(eT!==null&&ts===eT) cls+=' rc-end';
     if(rMin!==null&&rMax!==null&&ts>rMin&&ts<rMax) cls+=' rc-in-range';
-    h+=`<div class="${cls}" onclick="rcClick(${y},${mo},${d})" onmousemove="rcHov(${y},${mo},${d})">${d}<\/div>`;
+    h+=`<div class="${cls}" onclick="rcClick(${y},${mo},${d})" onmousemove="rcHov(${y},${mo},${d})">${d}</div>`;
   }
   el.innerHTML=h;
   rcUpdateInfo();
@@ -1129,16 +1129,16 @@ function rcUpdateInfo(){
   const el=document.getElementById('range-info');
   if(!el) return;
   if(!rcStart){
-    el.innerHTML=`<span style="color:#8896A7"><i class="ti ti-hand-click"><\/i> 1er clic: día de inicio · 2do clic: día final<\/span>`;
+    el.innerHTML=`<span style="color:#8896A7"><i class="ti ti-hand-click"></i> 1er clic: día de inicio · 2do clic: día final</span>`;
     return;
   }
   if(rcSelecting){
-    el.innerHTML=`<span style="color:#185FA5;font-weight:500">Inicio: <b>${rcStart.getDate()}/${rcStart.getMonth()+1}<\/b> — ahora clic en el día final<\/span>`;
+    el.innerHTML=`<span style="color:#185FA5;font-weight:500">Inicio: <b>${rcStart.getDate()}/${rcStart.getMonth()+1}</b> — ahora clic en el día final</span>`;
     return;
   }
   const dates=getRangeDates();
   const f=rcStart,t=rcEnd||rcStart;
-  el.innerHTML=`<span style="color:#0F1923;font-weight:500">${f.getDate()}/${f.getMonth()+1} → ${t.getDate()}/${t.getMonth()+1}<\/span>&nbsp;<span class="range-tag">${dates.length} día${dates.length!==1?'s':''}<\/span>&nbsp;<button class="range-clear" onclick="rcClear()"><i class="ti ti-x"><\/i> Limpiar<\/button>`;
+  el.innerHTML=`<span style="color:#0F1923;font-weight:500">${f.getDate()}/${f.getMonth()+1} → ${t.getDate()}/${t.getMonth()+1}</span>&nbsp;<span class="range-tag">${dates.length} día${dates.length!==1?'s':''}</span>&nbsp;<button class="range-clear" onclick="rcClear()"><i class="ti ti-x"></i> Limpiar</button>`;
 }
 function rcClear(){rcStart=null;rcEnd=null;rcHover=null;rcSelecting=false;rcRender();updatePreview();}
 
@@ -1159,21 +1159,21 @@ function renderROps(){
     const sel=rSelOps.has(op.id),h=rOpHours[op.id]||{inicio:'09:00',fin:'18:00'},hh=calcH(h.inicio,h.fin);
     const hc=hh>=8?'var(--green)':hh>=6?'var(--amber)':'var(--red)';
     return`<div class="op-row${sel?' sel':''}" style="${sel?`border-color:${op.tc};background:${op.bg}`:''}" onclick="rToggleOp('${op.id}')">
-      <i class="ti ${sel?'ti-checkbox':'ti-square'}" style="font-size:16px;${sel?`color:${op.tc}`:'color:var(--border2)'}"><\/i>
-      <div class="av" style="background:${op.bg};color:${op.tc}">${op.init}<\/div>
-      <span style="font-size:12px;font-weight:500;color:var(--text);flex:1">${op.name}<\/span>
+      <i class="ti ${sel?'ti-checkbox':'ti-square'}" style="font-size:16px;${sel?`color:${op.tc}`:'color:var(--border2)'}"></i>
+      <div class="av" style="background:${op.bg};color:${op.tc}">${op.init}</div>
+      <span style="font-size:12px;font-weight:500;color:var(--text);flex:1">${op.name}</span>
       ${sel?`<div class="op-row-times" onclick="event.stopPropagation()">
         ${timeSelect('tinp',h.inicio,"rSetH('"+op.id+"','inicio',this.value)")}
-        <span style="font-size:10px;color:var(--text3)">→<\/span>
+        <span style="font-size:10px;color:var(--text3)">→</span>
         ${timeSelect('tinp',h.fin,"rSetH('"+op.id+"','fin',this.value)")}
-        <span class="op-hrs-badge" style="background:${hc}20;color:${hc}">${hh}h<\/span>
-      <\/div>`:''}
-    <\/div>`;
+        <span class="op-hrs-badge" style="background:${hc}20;color:${hc}">${hh}h</span>
+      </div>`:''}
+    </div>`;
   }).join('');
 }
 function renderRGroups(){
   document.getElementById('r-assign-body').innerHTML=
-    groups.map(g=>{const sel=rSelGroups.has(g.id);return`<button class="g-sel-btn${sel?' sel':''}" style="${sel?`background:${g.bg};color:${g.tc};border-color:${g.tc};border-style:solid`:''}" onclick="rToggleGroup('${g.id}')">${g.badge} ${g.name}<\/button>`;}).join('');
+    groups.map(g=>{const sel=rSelGroups.has(g.id);return`<button class="g-sel-btn${sel?' sel':''}" style="${sel?`background:${g.bg};color:${g.tc};border-color:${g.tc};border-style:solid`:''}" onclick="rToggleGroup('${g.id}')">${g.badge} ${g.name}</button>`;}).join('');
 }
 function rToggleOp(id){rSelOps.has(id)?rSelOps.delete(id):rSelOps.add(id);renderROps();updatePreview();}
 function rSetH(id,f,v){if(!rOpHours[id])rOpHours[id]={inicio:'09:00',fin:'18:00'};rOpHours[id][f]=v;renderROps();updatePreview();}
@@ -1194,9 +1194,9 @@ function updatePreview(){
   const dates=getRangeDates(),ops=[...rSelOps],grps=[...rSelGroups];
   if(!dates.length||!ops.length||!grps.length){document.getElementById('r-preview').textContent='Completa los pasos para ver el resumen.';return;}
   const f=dates[0],t=dates[dates.length-1];
-  const opLines=ops.map(id=>{const op=OPS.find(o=>o.id===id),h=rOpHours[id]||{},hh=calcH(h.inicio,h.fin);return`<b>${op.short}<\/b>${hh>0?' ('+hh+'h/día)':''}`;}).join(', ');
+  const opLines=ops.map(id=>{const op=OPS.find(o=>o.id===id),h=rOpHours[id]||{},hh=calcH(h.inicio,h.fin);return`<b>${op.short}</b>${hh>0?' ('+hh+'h/día)':''}`;}).join(', ');
   const gNames=grps.map(id=>gG(id)?.badge||id).join(' + ');
-  document.getElementById('r-preview').innerHTML=`${opLines}<br>Grupos: <b>${gNames}<\/b><br>Del <b>${f.getDate()}/${f.getMonth()+1}<\/b> al <b>${t.getDate()}/${t.getMonth()+1}<\/b> — <b>${dates.length}<\/b> día${dates.length!==1?'s':''}`;
+  document.getElementById('r-preview').innerHTML=`${opLines}<br>Grupos: <b>${gNames}</b><br>Del <b>${f.getDate()}/${f.getMonth()+1}</b> al <b>${t.getDate()}/${t.getMonth()+1}</b> — <b>${dates.length}</b> día${dates.length!==1?'s':''}`;
 }
 
 async function applyRange(){
@@ -1262,18 +1262,18 @@ function renderGB(){
     const taskBg=g.bg.startsWith('#')?hexToRgba(g.bg,0.14):'rgba(255,255,255,0.06)';
     const taskBorder=g.bg.startsWith('#')?hexToRgba(g.bg,0.28):'rgba(255,255,255,0.08)';
     const taskBgH=g.bg.startsWith('#')?hexToRgba(g.bg,0.22):'rgba(255,255,255,0.1)';
-    h+=`<div class="gcard" style="border:2px solid ${g.bg};border-radius:10px"><div class="gcard-hd" style="background:${g.bg};border-bottom:2px solid ${g.bg}"><span class="gbg" style="background:${g.bg};color:${g.tc}" onclick="editBadge(${gi})" title="Clic para editar badge">${g.badge}<\/span><input class="gni" value="${g.name}" onchange="groups[${gi}].name=this.value;renderLeg()" onblur="saveGrupo(groups[${gi}])">${!isSys?`<button class="db3" onclick="delG(${gi})"><i class="ti ti-trash"><\/i><\/button>`:''}<\/div>`;
+    h+=`<div class="gcard" style="border:2px solid ${g.bg};border-radius:10px"><div class="gcard-hd" style="background:${g.bg};border-bottom:2px solid ${g.bg}"><span class="gbg" style="background:${g.bg};color:${g.tc}" onclick="editBadge(${gi})" title="Clic para editar badge">${g.badge}</span><input class="gni" value="${g.name}" onchange="groups[${gi}].name=this.value;renderLeg()" onblur="saveGrupo(groups[${gi}])">${!isSys?`<button class="db3" onclick="delG(${gi})"><i class="ti ti-trash"></i></button>`:''}</div>`;
     if(!isSys){
       const ghh=calcH(g.hInicio||'09:00',g.hFin||'18:00');
       h+=`<div class="gcard-body">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:6px 10px;background:#F0F4FF;border-radius:6px;border:1px solid #D0D8F0">
-          <span style="font-size:10px;color:#4A5568;font-weight:600">⏰ Horario por defecto<\/span>
+          <span style="font-size:10px;color:#4A5568;font-weight:600">⏰ Horario por defecto</span>
           ${timeSelect('tinp',g.hInicio||'09:00',"groups["+gi+"].hInicio=this.value;saveGrupo(groups["+gi+"])")}
-          <span style="font-size:10px;color:#8896A7">→<\/span>
+          <span style="font-size:10px;color:#8896A7">→</span>
           ${timeSelect('tinp',g.hFin||'18:00',"groups["+gi+"].hFin=this.value;saveGrupo(groups["+gi+"])")}
-          <span style="font-size:11px;font-weight:600;color:#185FA5">${ghh}h<\/span>
-          <span style="font-size:9px;color:#8896A7;margin-left:4px">Se aplica automáticamente al asignar<\/span>
-        <\/div>
+          <span style="font-size:11px;font-weight:600;color:#185FA5">${ghh}h</span>
+          <span style="font-size:9px;color:#8896A7;margin-left:4px">Se aplica automáticamente al asignar</span>
+        </div>
         <div class="task-list" id="tl-${g.id}">`;
       g.tasks.forEach((t,ti)=>{
         const td2=taskDetail[g.id]&&taskDetail[g.id][ti];
@@ -1285,27 +1285,27 @@ function renderGB(){
           ondrop="dragDrop(event,'${g.id}',${ti})"
           ondragend="dragEnd()"
           id="ti-${g.id}-${ti}">
-          <i class="ti ti-grip-vertical drag-handle" style="color:var(--text3)"><\/i>
+          <i class="ti ti-grip-vertical drag-handle" style="color:var(--text3)"></i>
           <input class="task-inp" value="${t.replace(/"/g,'&quot;')}" onchange="renameTask('${g.id}',${ti},this.value)" onclick="event.stopPropagation()">
-          ${hasD?`<i class="ti ti-file-text" style="font-size:11px;color:var(--text3);opacity:.5"><\/i>`:''}
-          ${hasC?`<span style="font-size:9px;background:${g.tc}20;color:${g.tc};padding:0 5px;border-radius:4px">${td2.comments.length}<\/span>`:''}
+          ${hasD?`<i class="ti ti-file-text" style="font-size:11px;color:var(--text3);opacity:.5"></i>`:''}
+          ${hasC?`<span style="font-size:9px;background:${g.tc}20;color:${g.tc};padding:0 5px;border-radius:4px">${td2.comments.length}</span>`:''}
           <div class="task-actions">
-            <button class="tact-btn" onclick="openTP('${g.id}',${ti})" title="Ver detalle"><i class="ti ti-pencil"><\/i><\/button>
-            <button class="tact-btn" onclick="openCopyMove('${g.id}',${ti},'copy')" title="Copiar a otro grupo"><i class="ti ti-copy"><\/i><\/button>
-            <button class="tact-btn" onclick="openCopyMove('${g.id}',${ti},'move')" title="Mover a otro grupo"><i class="ti ti-arrows-exchange"><\/i><\/button>
-            <button class="tact-btn red" onclick="rmT(${gi},${ti})" title="Eliminar"><i class="ti ti-trash"><\/i><\/button>
-          <\/div>
-        <\/div>`;
+            <button class="tact-btn" onclick="openTP('${g.id}',${ti})" title="Ver detalle"><i class="ti ti-pencil"></i></button>
+            <button class="tact-btn" onclick="openCopyMove('${g.id}',${ti},'copy')" title="Copiar a otro grupo"><i class="ti ti-copy"></i></button>
+            <button class="tact-btn" onclick="openCopyMove('${g.id}',${ti},'move')" title="Mover a otro grupo"><i class="ti ti-arrows-exchange"></i></button>
+            <button class="tact-btn red" onclick="rmT(${gi},${ti})" title="Eliminar"><i class="ti ti-trash"></i></button>
+          </div>
+        </div>`;
       });
-      h+=`<\/div>
+      h+=`</div>
       <div class="add-task-row">
         <input class="ai3" id="ti${gi}" placeholder="+ Nueva tarea..." onkeydown="if(event.key==='Enter')addT(${gi})">
-        <button class="ab3" onclick="addT(${gi})"><i class="ti ti-plus"><\/i> Añadir<\/button>
-      <\/div><\/div>`;
+        <button class="ab3" onclick="addT(${gi})"><i class="ti ti-plus"></i> Añadir</button>
+      </div></div>`;
     }
-    h+=`<\/div>`;
+    h+=`</div>`;
   });
-  h+=`<button class="ngb" onclick="newG()"><i class="ti ti-plus"><\/i> Nuevo grupo de trabajo<\/button>`;
+  h+=`<button class="ngb" onclick="newG()"><i class="ti ti-plus"></i> Nuevo grupo de trabajo</button>`;
   document.getElementById('gb').innerHTML=h;
 }
 
@@ -1341,13 +1341,13 @@ function openCopyMove(gid,ti,mode){
   const others=groups.filter(x=>!['off','vac'].includes(x.id)&&x.id!==gid);
   const modal=document.createElement('div');
   modal.id='cm-modal';modal.className='cm-modal';
-  modal.innerHTML=`<div class="cm-title">${mode==='copy'?'<i class="ti ti-copy"><\/i> Copiar tarea':'<i class="ti ti-arrows-exchange"><\/i> Mover tarea'}<\/div>
-    <div class="cm-sub">"${task}" → elige el grupo de destino<\/div>
-    <div class="cm-groups">${others.map(x=>`<div class="cm-g" id="cmg-${x.id}" onclick="cmSelect('${x.id}')"><span class="gbg" style="background:${x.bg};color:${x.tc}">${x.badge}<\/span><span style="font-size:12px;font-weight:500;color:var(--text)">${x.name}<\/span><\/div>`).join('')}<\/div>
+  modal.innerHTML=`<div class="cm-title">${mode==='copy'?'<i class="ti ti-copy"></i> Copiar tarea':'<i class="ti ti-arrows-exchange"></i> Mover tarea'}</div>
+    <div class="cm-sub">"${task}" → elige el grupo de destino</div>
+    <div class="cm-groups">${others.map(x=>`<div class="cm-g" id="cmg-${x.id}" onclick="cmSelect('${x.id}')"><span class="gbg" style="background:${x.bg};color:${x.tc}">${x.badge}</span><span style="font-size:12px;font-weight:500;color:var(--text)">${x.name}</span></div>`).join('')}</div>
     <div class="cm-btns">
-      <button class="cm-btn" onclick="closeCM()">Cancelar<\/button>
-      <button class="cm-btn ${mode==='copy'?'primary':'green'}" onclick="applyCM()">${mode==='copy'?'<i class="ti ti-copy"><\/i> Copiar':'<i class="ti ti-arrows-exchange"><\/i> Mover'}<\/button>
-    <\/div>`;
+      <button class="cm-btn" onclick="closeCM()">Cancelar</button>
+      <button class="cm-btn ${mode==='copy'?'primary':'green'}" onclick="applyCM()">${mode==='copy'?'<i class="ti ti-copy"></i> Copiar':'<i class="ti ti-arrows-exchange"></i> Mover'}</button>
+    </div>`;
   const bg=document.createElement('div');bg.id='cm-bg';bg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:199;backdrop-filter:blur(2px)';bg.onclick=closeCM;
   document.body.appendChild(bg);document.body.appendChild(modal);
 }
@@ -1371,17 +1371,17 @@ async function newG(){const i=groups.length%COLS.length;const ng={id:`g${Date.no
 function whoWorked(y,m,d){return OPS.filter(op=>{const arr=getArr(y,m,d,op.id);return arr.length&&!arr.every(g=>g==='off'||g==='vac');});}
 function getWH(){const dim=new Date(cy,cm+1,0).getDate();const sats=[],doms=[];for(let d=1;d<=dim;d++){const wd=new Date(cy,cm,d).getDay();if(wd===6)sats.push(d);if(wd===0)doms.push(d);}return{sats,doms};}
 function getAIRec(targetDay,type){const{sats,doms}=getWH();const pastDays=(type==='sat'?sats:doms).filter(d=>d<targetDay);const opH={};OPS.forEach(op=>{opH[op.id]=[];});pastDays.forEach(d=>{const w=whoWorked(cy,cm,d);OPS.forEach(op=>{opH[op.id].push({day:d,worked:w.some(o=>o.id===op.id)});});});const lastDay=pastDays[pastDays.length-1];const wLast=lastDay?whoWorked(cy,cm,lastDay).map(o=>o.id):[];const tc={};OPS.forEach(op=>{let c=0;const{sats:s2,doms:d2}=getWH();[...s2,...d2].filter(d=>d<targetDay).forEach(d=>{if(whoWorked(cy,cm,d).some(o=>o.id===op.id))c++;});tc[op.id]=c;});const nwt=OPS.filter(op=>!opH[op.id].some(h=>h.worked)).map(o=>o.id);const ranked=[...OPS].sort((a,b)=>{const aN=nwt.includes(a.id)?0:1,bN=nwt.includes(b.id)?0:1;if(aN!==bN)return aN-bN;return(tc[a.id]||0)-(tc[b.id]||0);});return{ranked,wLast,lastDay,nwt,tc,cw:whoWorked(cy,cm,targetDay).map(o=>o.id),isA:whoWorked(cy,cm,targetDay).length>0,pastDays,opH};}
-function buildMsgs(d,type,rec){const{ranked,wLast,lastDay,nwt,tc,cw,isA,pastDays}=rec;const msgs=[];if(lastDay){const n=wLast.map(id=>OPS.find(o=>o.id===id)?.short||id);if(n.length)msgs.push({type:'info',text:`El ${type==='sat'?'sábado':'domingo'} ${lastDay} trabajaron: <b>${n.join(' y ')}<\/b>.`});}else msgs.push({type:'info',text:`Es el primer ${type==='sat'?'sábado':'domingo'} del mes.`});if(isA){const n=cw.map(id=>OPS.find(o=>o.id===id)?.short||id);msgs.push({type:'ok',text:`Ya tienes asignado: <b>${n.join(' y ')}<\/b>.`,sub:'Puedes cambiar si lo necesitas.'});}if(nwt.length&&pastDays.length>0){const n=nwt.map(id=>OPS.find(o=>o.id===id)?.short||id);msgs.push({type:'info',text:`Sin ${type==='sat'?'sábados':'domingos'} aún: <b>${n.join(', ')}<\/b>.`,sub:'Tienen prioridad de rotación.'});}const top2=ranked.slice(0,2),alrec=top2.every(op=>cw.includes(op.id));if(!alrec){const rn=top2.map(op=>{const count=tc[op.id]||0;const never=nwt.includes(op.id);const r=never&&pastDays.length>0?`(no ha trabajado ${type==='sat'?'sábados':'domingos'} aún)`:count===0?'(sin FDS aún)':`(${count} FDS)`;return`<b>${op.short}<\/b> ${r}`;});msgs.push({type:'main',text:`Para el ${type==='sat'?'sábado':'domingo'} ${d} te recomiendo: ${rn.join(' y ')}.`,sub:'Basado en menor carga de fines de semana.',applyData:{d,type,opIds:top2.map(o=>o.id)}});}else msgs.push({type:'ok',text:`La asignación actual ya sigue la rotación.`});const ol=OPS.filter(op=>{const h=rec.opH[op.id];return h.length>=2&&h.slice(-2).every(x=>x.worked);});if(ol.length)msgs.push({type:'warn',text:`<b>${ol.map(op=>op.short).join(', ')}<\/b> trabajaron 2 FDS seguidos.`,sub:'Considera darles descanso.'});return msgs;}
-function renderAI(){const{sats,doms}=getWH();const allWe=[...sats.map(d=>({d,type:'sat'})),...doms.map(d=>({d,type:'dom'}))].sort((a,b)=>a.d-b.d);const todayD=today.getMonth()===cm&&today.getFullYear()===cy?today.getDate():1;const upcoming=allWe.filter(w=>w.d>=todayD),past=allWe.filter(w=>w.d<todayD);let h=`<div style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;margin-bottom:10px"><div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:8px">Resumen FDS — ${MO[cm]} ${cy}<\/div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">`;OPS.forEach(op=>{const sc=sats.filter(d=>whoWorked(cy,cm,d).some(o=>o.id===op.id)).length,dc=doms.filter(d=>whoWorked(cy,cm,d).some(o=>o.id===op.id)).length;h+=`<div style="text-align:center;padding:7px 4px;background:${op.bg};border-radius:var(--radius-sm)"><div style="width:22px;height:22px;border-radius:50%;background:${op.bg};border:1px solid ${op.tc}40;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:${op.tc};margin:0 auto 4px">${op.init}<\/div><div style="font-size:15px;font-weight:600;color:${op.tc}">${sc+dc}<\/div><div style="font-size:8px;color:${op.tc};opacity:.7">S:${sc} D:${dc}<\/div><\/div>`;});h+=`<\/div><\/div>`;if(upcoming.length){h+=`<div style="font-size:9px;font-weight:600;color:var(--text3);margin:6px 0 5px;text-transform:uppercase;letter-spacing:.06em">Próximos<\/div>`;upcoming.slice(0,6).forEach(({d,type})=>{const rec=getAIRec(d,type);const msgs=buildMsgs(d,type,rec);const isSat=type==='sat';h+=`<div class="fds-card"><div class="fds-hd"><span style="width:8px;height:8px;border-radius:50%;background:${isSat?'var(--amber-l)':'var(--purple-l)'};border:1px solid ${isSat?'var(--amber)':'var(--purple)'};display:inline-block"><\/span>${isSat?'Sábado':'Domingo'} ${d} de ${MO[cm]}${rec.isA?`<span style="margin-left:auto;font-size:9px;background:var(--green-l);color:var(--green);padding:1px 6px;border-radius:4px;font-weight:500">Asignado<\/span>`:`<span style="margin-left:auto;font-size:9px;background:var(--surface3);color:var(--text3);padding:1px 6px;border-radius:4px">Sin asignar<\/span>`}<\/div><div class="fds-bd">`;msgs.forEach(msg=>{h+=`<div class="ai-bubble${msg.type==='warn'?' warn':msg.type==='ok'?' ok':msg.type==='info'?' info':''}"><div class="ai-text">${msg.text}<\/div>${msg.sub?`<div class="ai-sub">${msg.sub}<\/div>`:''}${msg.applyData?`<div style="margin-top:7px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${msg.applyData.opIds.map(id=>{const op=OPS.find(o=>o.id===id);return`<span class="rec-chip" style="background:${op.bg};color:${op.tc};border-color:${op.tc}40">${op.init} ${op.short}<\/span>`;}).join('')}<button class="btn blue" style="font-size:10px;padding:4px 10px;margin-left:auto" onclick="applyRec(${cy},${cm},${msg.applyData.d},'${msg.applyData.type}',${JSON.stringify(msg.applyData.opIds)})"><i class="ti ti-check"><\/i> Aplicar<\/button><\/div>`:''}<\/div>`;});h+=`<\/div><\/div>`;});}if(past.length){h+=`<div style="font-size:9px;font-weight:600;color:var(--text3);margin:10px 0 5px;text-transform:uppercase;letter-spacing:.06em">Historial<\/div>`;past.forEach(({d,type})=>{const worked=whoWorked(cy,cm,d);h+=`<div style="display:flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:4px"><span style="font-size:10px;font-weight:500;min-width:54px;color:var(--text)">${type==='sat'?'Sáb':'Dom'} ${d}<\/span>${worked.length?worked.map(op=>`<span class="bdg" style="background:${op.bg};color:${op.tc}">${op.init} ${op.short}<\/span>`).join(''):`<span style="font-size:10px;color:var(--text3)">Sin asignar<\/span>`}<\/div>`;});}document.getElementById('ai-body').innerHTML=h;}
+function buildMsgs(d,type,rec){const{ranked,wLast,lastDay,nwt,tc,cw,isA,pastDays}=rec;const msgs=[];if(lastDay){const n=wLast.map(id=>OPS.find(o=>o.id===id)?.short||id);if(n.length)msgs.push({type:'info',text:`El ${type==='sat'?'sábado':'domingo'} ${lastDay} trabajaron: <b>${n.join(' y ')}</b>.`});}else msgs.push({type:'info',text:`Es el primer ${type==='sat'?'sábado':'domingo'} del mes.`});if(isA){const n=cw.map(id=>OPS.find(o=>o.id===id)?.short||id);msgs.push({type:'ok',text:`Ya tienes asignado: <b>${n.join(' y ')}</b>.`,sub:'Puedes cambiar si lo necesitas.'});}if(nwt.length&&pastDays.length>0){const n=nwt.map(id=>OPS.find(o=>o.id===id)?.short||id);msgs.push({type:'info',text:`Sin ${type==='sat'?'sábados':'domingos'} aún: <b>${n.join(', ')}</b>.`,sub:'Tienen prioridad de rotación.'});}const top2=ranked.slice(0,2),alrec=top2.every(op=>cw.includes(op.id));if(!alrec){const rn=top2.map(op=>{const count=tc[op.id]||0;const never=nwt.includes(op.id);const r=never&&pastDays.length>0?`(no ha trabajado ${type==='sat'?'sábados':'domingos'} aún)`:count===0?'(sin FDS aún)':`(${count} FDS)`;return`<b>${op.short}</b> ${r}`;});msgs.push({type:'main',text:`Para el ${type==='sat'?'sábado':'domingo'} ${d} te recomiendo: ${rn.join(' y ')}.`,sub:'Basado en menor carga de fines de semana.',applyData:{d,type,opIds:top2.map(o=>o.id)}});}else msgs.push({type:'ok',text:`La asignación actual ya sigue la rotación.`});const ol=OPS.filter(op=>{const h=rec.opH[op.id];return h.length>=2&&h.slice(-2).every(x=>x.worked);});if(ol.length)msgs.push({type:'warn',text:`<b>${ol.map(op=>op.short).join(', ')}</b> trabajaron 2 FDS seguidos.`,sub:'Considera darles descanso.'});return msgs;}
+function renderAI(){const{sats,doms}=getWH();const allWe=[...sats.map(d=>({d,type:'sat'})),...doms.map(d=>({d,type:'dom'}))].sort((a,b)=>a.d-b.d);const todayD=today.getMonth()===cm&&today.getFullYear()===cy?today.getDate():1;const upcoming=allWe.filter(w=>w.d>=todayD),past=allWe.filter(w=>w.d<todayD);let h=`<div style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;margin-bottom:10px"><div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:8px">Resumen FDS — ${MO[cm]} ${cy}</div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">`;OPS.forEach(op=>{const sc=sats.filter(d=>whoWorked(cy,cm,d).some(o=>o.id===op.id)).length,dc=doms.filter(d=>whoWorked(cy,cm,d).some(o=>o.id===op.id)).length;h+=`<div style="text-align:center;padding:7px 4px;background:${op.bg};border-radius:var(--radius-sm)"><div style="width:22px;height:22px;border-radius:50%;background:${op.bg};border:1px solid ${op.tc}40;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:${op.tc};margin:0 auto 4px">${op.init}</div><div style="font-size:15px;font-weight:600;color:${op.tc}">${sc+dc}</div><div style="font-size:8px;color:${op.tc};opacity:.7">S:${sc} D:${dc}</div></div>`;});h+=`</div></div>`;if(upcoming.length){h+=`<div style="font-size:9px;font-weight:600;color:var(--text3);margin:6px 0 5px;text-transform:uppercase;letter-spacing:.06em">Próximos</div>`;upcoming.slice(0,6).forEach(({d,type})=>{const rec=getAIRec(d,type);const msgs=buildMsgs(d,type,rec);const isSat=type==='sat';h+=`<div class="fds-card"><div class="fds-hd"><span style="width:8px;height:8px;border-radius:50%;background:${isSat?'var(--amber-l)':'var(--purple-l)'};border:1px solid ${isSat?'var(--amber)':'var(--purple)'};display:inline-block"></span>${isSat?'Sábado':'Domingo'} ${d} de ${MO[cm]}${rec.isA?`<span style="margin-left:auto;font-size:9px;background:var(--green-l);color:var(--green);padding:1px 6px;border-radius:4px;font-weight:500">Asignado</span>`:`<span style="margin-left:auto;font-size:9px;background:var(--surface3);color:var(--text3);padding:1px 6px;border-radius:4px">Sin asignar</span>`}</div><div class="fds-bd">`;msgs.forEach(msg=>{h+=`<div class="ai-bubble${msg.type==='warn'?' warn':msg.type==='ok'?' ok':msg.type==='info'?' info':''}"><div class="ai-text">${msg.text}</div>${msg.sub?`<div class="ai-sub">${msg.sub}</div>`:''}${msg.applyData?`<div style="margin-top:7px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">${msg.applyData.opIds.map(id=>{const op=OPS.find(o=>o.id===id);return`<span class="rec-chip" style="background:${op.bg};color:${op.tc};border-color:${op.tc}40">${op.init} ${op.short}</span>`;}).join('')}<button class="btn blue" style="font-size:10px;padding:4px 10px;margin-left:auto" onclick="applyRec(${cy},${cm},${msg.applyData.d},'${msg.applyData.type}',${JSON.stringify(msg.applyData.opIds)})"><i class="ti ti-check"></i> Aplicar</button></div>`:''}</div>`;});h+=`</div></div>`;});}if(past.length){h+=`<div style="font-size:9px;font-weight:600;color:var(--text3);margin:10px 0 5px;text-transform:uppercase;letter-spacing:.06em">Historial</div>`;past.forEach(({d,type})=>{const worked=whoWorked(cy,cm,d);h+=`<div style="display:flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:4px"><span style="font-size:10px;font-weight:500;min-width:54px;color:var(--text)">${type==='sat'?'Sáb':'Dom'} ${d}</span>${worked.length?worked.map(op=>`<span class="bdg" style="background:${op.bg};color:${op.tc}">${op.init} ${op.short}</span>`).join(''):`<span style="font-size:10px;color:var(--text3)">Sin asignar</span>`}</div>`;});}document.getElementById('ai-body').innerHTML=h;}
 async function applyRec(y,m,d,type,opIds){const gId=type==='sat'?'gsat':'gdom';OPS.forEach(op=>{if(opIds.includes(op.id))setArr(y,m,d,op.id,[gId]);else setArr(y,m,d,op.id,['off']);});await saveBatch(OPS.map(op=>({y,m,d,opId:op.id})));renderC();renderAI();}
 function openAI(){renderAI();document.getElementById('aip').classList.add('on');document.getElementById('ov').classList.add('on');document.getElementById('ov').onclick=closeAI;}
 function closeAI(){document.getElementById('aip').classList.remove('on');document.getElementById('ov').classList.remove('on');}
 
 // TASK DETAIL
-function openTP(gid,ti){curGid=gid;curTi=ti;const g=gG(gid);const td=getTD(gid,ti);document.getElementById('tp-badge-wrap').innerHTML=`<span class="tp-badge" style="background:${g.bg};color:${g.tc}">${g.badge} ${g.name}<\/span>`;document.getElementById('tp-name').value=td.name||g.tasks[ti]||'';document.getElementById('tp-freq-wrap').innerHTML=`<span style="font-size:10px;color:var(--text3);margin-right:3px">Frecuencia:<\/span>`+FREQS.map(f=>`<span class="freq${td.freq===f?' sel':''}" onclick="setFreq('${f}')">${f}<\/span>`).join('');renderTPBody();document.getElementById('tp').classList.add('on');}
-function renderTPBody(){const td=getTD(curGid,curTi);let h=`<div class="sbox"><div class="stitle"><i class="ti ti-align-left"><\/i> Descripción<\/div><div class="sbody"><textarea class="desc-area" placeholder="Describe el proceso, objetivo y contexto..." oninput="getTD(curGid,curTi).desc=this.value">${td.desc}<\/textarea><\/div><\/div>`;h+=`<div class="sbox"><div class="stitle"><i class="ti ti-list-numbers"><\/i> Pasos del proceso<span style="margin-left:auto;font-size:9px;background:var(--surface);padding:1px 6px;border-radius:4px;border:1px solid var(--border)">${td.steps.length} paso${td.steps.length!==1?'s':''}<\/span><\/div><div class="sbody">`;td.steps.forEach((s,i)=>{h+=`<div class="step-item"><div class="step-num">${i+1}<\/div><input class="step-inp" value="${s.replace(/"/g,'&quot;')}" placeholder="Describe el paso..." onchange="stepEdit(${i},this.value)"><button class="step-del" onclick="stepDel(${i})"><i class="ti ti-x" style="font-size:10px"><\/i><\/button><\/div>`;});h+=`<button class="add-step" onclick="stepAdd()"><i class="ti ti-plus"><\/i> Agregar paso<\/button><\/div><\/div>`;h+=`<div class="sbox"><div class="stitle"><i class="ti ti-message-circle"><\/i> Comentarios del equipo<span style="margin-left:auto;font-size:9px;background:var(--surface);padding:1px 6px;border-radius:4px;border:1px solid var(--border)">${td.comments.length}<\/span><\/div><div class="sbody">`;if(!td.comments.length)h+=`<div style="font-size:11px;color:var(--text3);padding:4px 0">Sin comentarios aún.<\/div>`;else td.comments.forEach((c,i)=>{const op=OPS.find(o=>o.id===c.author)||{init:'?',bg:'var(--surface3)',tc:'var(--text3)',name:'Anónimo'};h+=`<div class="comment"><div class="c-av" style="background:${op.bg};color:${op.tc}">${op.init}<\/div><div class="c-body"><div class="c-meta"><span class="c-auth">${op.name}<\/span><span class="c-time">${c.time}<\/span><button class="c-del" onclick="delComment(${i})"><i class="ti ti-trash" style="font-size:10px"><\/i><\/button><\/div><div class="c-txt">${c.text}<\/div><\/div><\/div>`;});h+=`<\/div><div class="cin-wrap"><select style="font-size:11px;padding:6px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);color:var(--text);height:36px;font-family:inherit" id="c-author">${OPS.map(o=>`<option value="${o.id}">${o.short}<\/option>`).join('')}<\/select><textarea class="cin" id="c-inp" placeholder="Escribe un comentario..." rows="1"><\/textarea><button class="c-send" onclick="addComment()"><i class="ti ti-send"><\/i><\/button><\/div><\/div>`;document.getElementById('tp-body').innerHTML=h;}
+function openTP(gid,ti){curGid=gid;curTi=ti;const g=gG(gid);const td=getTD(gid,ti);document.getElementById('tp-badge-wrap').innerHTML=`<span class="tp-badge" style="background:${g.bg};color:${g.tc}">${g.badge} ${g.name}</span>`;document.getElementById('tp-name').value=td.name||g.tasks[ti]||'';document.getElementById('tp-freq-wrap').innerHTML=`<span style="font-size:10px;color:var(--text3);margin-right:3px">Frecuencia:</span>`+FREQS.map(f=>`<span class="freq${td.freq===f?' sel':''}" onclick="setFreq('${f}')">${f}</span>`).join('');renderTPBody();document.getElementById('tp').classList.add('on');}
+function renderTPBody(){const td=getTD(curGid,curTi);let h=`<div class="sbox"><div class="stitle"><i class="ti ti-align-left"></i> Descripción</div><div class="sbody"><textarea class="desc-area" placeholder="Describe el proceso, objetivo y contexto..." oninput="getTD(curGid,curTi).desc=this.value">${td.desc}</textarea></div></div>`;h+=`<div class="sbox"><div class="stitle"><i class="ti ti-list-numbers"></i> Pasos del proceso<span style="margin-left:auto;font-size:9px;background:var(--surface);padding:1px 6px;border-radius:4px;border:1px solid var(--border)">${td.steps.length} paso${td.steps.length!==1?'s':''}</span></div><div class="sbody">`;td.steps.forEach((s,i)=>{h+=`<div class="step-item"><div class="step-num">${i+1}</div><input class="step-inp" value="${s.replace(/"/g,'&quot;')}" placeholder="Describe el paso..." onchange="stepEdit(${i},this.value)"><button class="step-del" onclick="stepDel(${i})"><i class="ti ti-x" style="font-size:10px"></i></button></div>`;});h+=`<button class="add-step" onclick="stepAdd()"><i class="ti ti-plus"></i> Agregar paso</button></div></div>`;h+=`<div class="sbox"><div class="stitle"><i class="ti ti-message-circle"></i> Comentarios del equipo<span style="margin-left:auto;font-size:9px;background:var(--surface);padding:1px 6px;border-radius:4px;border:1px solid var(--border)">${td.comments.length}</span></div><div class="sbody">`;if(!td.comments.length)h+=`<div style="font-size:11px;color:var(--text3);padding:4px 0">Sin comentarios aún.</div>`;else td.comments.forEach((c,i)=>{const op=OPS.find(o=>o.id===c.author)||{init:'?',bg:'var(--surface3)',tc:'var(--text3)',name:'Anónimo'};h+=`<div class="comment"><div class="c-av" style="background:${op.bg};color:${op.tc}">${op.init}</div><div class="c-body"><div class="c-meta"><span class="c-auth">${op.name}</span><span class="c-time">${c.time}</span><button class="c-del" onclick="delComment(${i})"><i class="ti ti-trash" style="font-size:10px"></i></button></div><div class="c-txt">${c.text}</div></div></div>`;});h+=`</div><div class="cin-wrap"><select style="font-size:11px;padding:6px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);color:var(--text);height:36px;font-family:inherit" id="c-author">${OPS.map(o=>`<option value="${o.id}">${o.short}</option>`).join('')}</select><textarea class="cin" id="c-inp" placeholder="Escribe un comentario..." rows="1"></textarea><button class="c-send" onclick="addComment()"><i class="ti ti-send"></i></button></div></div>`;document.getElementById('tp-body').innerHTML=h;}
 async function saveTaskName(){const v=document.getElementById('tp-name').value.trim();if(!v)return;getTD(curGid,curTi).name=v;const g=gG(curGid);if(g&&curTi<g.tasks.length){g.tasks[curTi]=v;await saveGrupo(g);}await saveTD(curGid,curTi);renderGB();}
-async function setFreq(f){const td=getTD(curGid,curTi);td.freq=td.freq===f?'':f;document.getElementById('tp-freq-wrap').innerHTML=`<span style="font-size:10px;color:var(--text3);margin-right:3px">Frecuencia:<\/span>`+FREQS.map(fr=>`<span class="freq${td.freq===fr?' sel':''}" onclick="setFreq('${fr}')">${fr}<\/span>`).join('');await saveTD(curGid,curTi);}
+async function setFreq(f){const td=getTD(curGid,curTi);td.freq=td.freq===f?'':f;document.getElementById('tp-freq-wrap').innerHTML=`<span style="font-size:10px;color:var(--text3);margin-right:3px">Frecuencia:</span>`+FREQS.map(fr=>`<span class="freq${td.freq===fr?' sel':''}" onclick="setFreq('${fr}')">${fr}</span>`).join('');await saveTD(curGid,curTi);}
 async function stepAdd(){getTD(curGid,curTi).steps.push('');renderTPBody();await saveTD(curGid,curTi);}
 async function stepEdit(i,v){getTD(curGid,curTi).steps[i]=v;await saveTD(curGid,curTi);}
 async function stepDel(i){getTD(curGid,curTi).steps.splice(i,1);renderTPBody();await saveTD(curGid,curTi);}
@@ -1439,31 +1439,31 @@ function renderTeam(){
   OPS.forEach((op,i)=>{
     h+=`<div style="border:1px solid #E2E6ED;border-left:4px solid ${op.tc};border-radius:8px;padding:12px 14px;margin-bottom:8px;background:#FFFFFF;box-shadow:0 1px 3px rgba(0,0,0,.05)">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-        <div style="width:38px;height:38px;border-radius:50%;background:${op.bg};color:${op.tc};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;border:2px solid ${op.tc}40">${op.init}<\/div>
-        <div style="flex:1"><div style="font-size:10px;color:#8896A7;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Integrante ${i+1}<\/div><\/div>
-        ${OPS.length>1?`<button onclick="removeOp(${i})" style="background:none;border:1px solid #F7C1C1;border-radius:6px;padding:4px 9px;cursor:pointer;color:#A32D2D;font-size:10px;font-family:inherit"><i class="ti ti-trash"><\/i> Eliminar<\/button>`:''}
-      <\/div>
+        <div style="width:38px;height:38px;border-radius:50%;background:${op.bg};color:${op.tc};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;border:2px solid ${op.tc}40">${op.init}</div>
+        <div style="flex:1"><div style="font-size:10px;color:#8896A7;font-weight:600;text-transform:uppercase;letter-spacing:.05em">Integrante ${i+1}</div></div>
+        ${OPS.length>1?`<button onclick="removeOp(${i})" style="background:none;border:1px solid #F7C1C1;border-radius:6px;padding:4px 9px;cursor:pointer;color:#A32D2D;font-size:10px;font-family:inherit"><i class="ti ti-trash"></i> Eliminar</button>`:''}
+      </div>
       <div style="display:grid;grid-template-columns:1fr 80px;gap:8px;margin-bottom:10px">
         <div>
-          <div style="font-size:10px;color:#8896A7;margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Nombre completo<\/div>
+          <div style="font-size:10px;color:#8896A7;margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Nombre completo</div>
           <input style="width:100%;font-size:12px;padding:7px 9px;border-radius:6px;border:1px solid #E2E6ED;background:#FAFAFA;color:#0F1923;font-family:inherit;outline:none" value="${op.name}" onchange="OPS[${i}].name=this.value;OPS[${i}].short=this.value.split(' ')[0];renderTeam()" onfocus="this.style.borderColor='#185FA5'" onblur="this.style.borderColor='#E2E6ED'">
-        <\/div>
+        </div>
         <div>
-          <div style="font-size:10px;color:#8896A7;margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Iniciales<\/div>
+          <div style="font-size:10px;color:#8896A7;margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Iniciales</div>
           <input style="width:100%;font-size:13px;font-weight:700;padding:7px 9px;border-radius:6px;border:1px solid #E2E6ED;background:#FAFAFA;color:${op.tc};font-family:inherit;text-align:center;outline:none;letter-spacing:.05em" maxlength="2" value="${op.init}" onchange="OPS[${i}].init=this.value.toUpperCase().slice(0,2);renderTeam()" onfocus="this.style.borderColor='#185FA5'" onblur="this.style.borderColor='#E2E6ED'">
-        <\/div>
-      <\/div>
+        </div>
+      </div>
       <div>
-        <div style="font-size:10px;color:#8896A7;margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Color de identificación<\/div>
+        <div style="font-size:10px;color:#8896A7;margin-bottom:6px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Color de identificación</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          ${OP_BG_OPTS.map((c,ci)=>`<div onclick="OPS[${i}].bg='${c.bg}';OPS[${i}].tc='${c.tc}';renderTeam()" style="width:26px;height:26px;border-radius:50%;background:${c.bg};border:2.5px solid ${op.bg===c.bg?c.tc:'transparent'};cursor:pointer;transition:all .15s;box-shadow:${op.bg===c.bg?'0 0 0 2px '+c.tc+'40':'none'}" title="${c.bg}"><\/div>`).join('')}
-        <\/div>
-      <\/div>
-    <\/div>`;
+          ${OP_BG_OPTS.map((c,ci)=>`<div onclick="OPS[${i}].bg='${c.bg}';OPS[${i}].tc='${c.tc}';renderTeam()" style="width:26px;height:26px;border-radius:50%;background:${c.bg};border:2.5px solid ${op.bg===c.bg?c.tc:'transparent'};cursor:pointer;transition:all .15s;box-shadow:${op.bg===c.bg?'0 0 0 2px '+c.tc+'40':'none'}" title="${c.bg}"></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
   });
   h+=`<button onclick="addOp()" style="width:100%;padding:11px;border-radius:8px;border:2px dashed #CDD2DB;background:none;cursor:pointer;font-size:12px;color:#8896A7;font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px" onmouseover="this.style.background='#F5F8FF';this.style.borderColor='#185FA5';this.style.color='#185FA5'" onmouseout="this.style.background='none';this.style.borderColor='#CDD2DB';this.style.color='#8896A7'">
-    <i class="ti ti-user-plus"><\/i> Agregar integrante
-  <\/button>`;
+    <i class="ti ti-user-plus"></i> Agregar integrante
+  </button>`;
   document.getElementById('team-body').innerHTML=h;
 }
 function addOp(){
