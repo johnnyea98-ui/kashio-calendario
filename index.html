@@ -750,6 +750,14 @@ function renderMonth(){
   }
   return h+'</div></div>';
 }
+function wkDates2(){
+  const base=new Date(cy,cm,1);
+  const dow=base.getDay();
+  const d2m=(dow===0)?-6:1-dow;
+  const mon=new Date(base);
+  mon.setDate(base.getDate()+d2m+woff*7);
+  return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});
+}
 function renderWeek(){
   const dates=wkDates2();
   let h=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px"><button class="btn icon" onclick="woff--;renderC(true)"><i class="ti ti-chevron-left"></i></button><span style="font-size:12px;color:var(--text3)">${dates[0].getDate()}/${dates[0].getMonth()+1} – ${dates[6].getDate()}/${dates[6].getMonth()+1}</span><button class="btn icon" onclick="woff++;renderC(true)"><i class="ti ti-chevron-right"></i></button></div><div class="wg"><div class="wh">Op.</div>`;
