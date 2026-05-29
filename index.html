@@ -759,7 +759,21 @@ function renderWeek(){
 let _lY=null,_lM=null;
 async function renderC(force){
   document.getElementById('mtitle').textContent=`${MO[cm]} ${cy}`;
-  if(force||_lY!==cy||_lM!==cm){await loadAsgn(cy,cm);_lY=cy;_lM=cm;}
+  if(force||_lY!==cy||_lM!==cm){
+    await loadAsgn(cy,cm);
+    _lY=cy;_lM=cm;
+    // If week view, also load adjacent months if week spans them
+    if(view==='week'){
+      const dates=wkDates2();
+      const first=dates[0],last=dates[6];
+      if(first.getMonth()!==cm||first.getFullYear()!==cy){
+        await loadAsgn(first.getFullYear(),first.getMonth());
+      }
+      if(last.getMonth()!==cm||last.getFullYear()!==cy){
+        await loadAsgn(last.getFullYear(),last.getMonth());
+      }
+    }
+  }
   document.getElementById('cal').innerHTML=view==='month'?renderMonth():renderWeek();
   renderLeg();
 }
