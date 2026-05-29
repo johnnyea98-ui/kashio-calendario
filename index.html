@@ -466,7 +466,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
   </div>
   <div class="hours-bar">
     <span class="hb-title"><i class="ti ti-clock"></i> Horas semana</span>
-    <div id="hours-content" style="display:flex;gap:14px;flex:1;flex-wrap:wrap"></div>
+    <div id="hours-content" style="display:flex;gap:6px;flex:1;flex-wrap:wrap"></div>
     <span style="font-size:10px;color:var(--text3);flex-shrink:0">Meta <b style="color:var(--text)">48h</b>/sem</span>
   </div>
   <div class="legend" id="leg"></div>
@@ -664,7 +664,8 @@ async function loadAll(){
     // Load groups
     const{data:gData,error:gErr}=await db.from('grupos').select('*').order('orden');
     if(gErr)throw gErr;
-    groups=gData.map(g=>({id:g.id,badge:g.badge,name:g.nombre,bg:g.color_bg,tc:g.color_tc,tasks:Array.isArray(g.tareas)?g.tareas:JSON.parse(g.tareas||'[]')}));
+    const GH={'g1':['09:00','18:00'],'g2':['09:00','18:00'],'g3':['09:00','18:00'],'g4':['09:00','18:00'],'gsat':['09:00','18:00'],'gdom':['09:00','18:00'],'off':['',''],'vac':['','']};
+    groups=gData.map(g=>{const dh=GH[g.id]||['09:00','18:00'];return{id:g.id,badge:g.badge,name:g.nombre,bg:g.color_bg,tc:g.color_tc,hInicio:g.hora_inicio||dh[0],hFin:g.hora_fin||dh[1],tasks:Array.isArray(g.tareas)?g.tareas:JSON.parse(g.tareas||'[]')};});
     // Load task details
     const{data:tdData}=await db.from('tareas_detalle').select('*');
     if(tdData)tdData.forEach(td=>{if(!taskDetail[td.grupo_id])taskDetail[td.grupo_id]={};taskDetail[td.grupo_id][td.tarea_idx]={name:td.nombre,desc:td.descripcion,freq:td.frecuencia,steps:Array.isArray(td.pasos)?td.pasos:JSON.parse(td.pasos||'[]'),comments:Array.isArray(td.comentarios)?td.comentarios:JSON.parse(td.comentarios||'[]')};});
@@ -691,7 +692,7 @@ async function saveBatch(entries){
     setSyncing('ok');showToast(`✓ ${entries.length} asignaciones guardadas`);
   }catch(e){console.error(e);setSyncing('error');showToast('Error al guardar');}
 }
-async function saveGrupo(g){setSyncing('saving');try{await db.from('grupos').upsert({id:g.id,badge:g.badge,nombre:g.name,color_bg:g.bg,color_tc:g.tc,tareas:g.tasks,updated_at:new Date().toISOString()},{onConflict:'id'});setSyncing('ok');}catch(e){console.error(e);setSyncing('error');}}
+async function saveGrupo(g){setSyncing('saving');try{await db.from('grupos').upsert({id:g.id,badge:g.badge,nombre:g.name,color_bg:g.bg,color_tc:g.tc,tareas:g.tasks,hora_inicio:g.hInicio||null,hora_fin:g.hFin||null,updated_at:new Date().toISOString()},{onConflict:'id'});setSyncing('ok');}catch(e){console.error(e);setSyncing('error');}}
 async function deleteGrupo(id){try{await db.from('grupos').delete().eq('id',id);}catch(e){console.error(e);}}
 async function saveTD(gid,ti){const td=getTD(gid,ti);setSyncing('saving');try{await db.from('tareas_detalle').upsert({grupo_id:gid,tarea_idx:ti,nombre:td.name,descripcion:td.desc,frecuencia:td.freq,pasos:td.steps,comentarios:td.comments,updated_at:new Date().toISOString()},{onConflict:'grupo_id,tarea_idx'});setSyncing('ok');}catch(e){console.error(e);setSyncing('error');}}
 
@@ -699,13 +700,24 @@ async function saveTD(gid,ti){const td=getTD(gid,ti);setSyncing('saving');try{aw
 function renderHoursBar(){
   const wd=wkDates2();let html='';
   OPS.forEach(op=>{
-    let total=0;wd.forEach(d=>{const h=getH(d.getFullYear(),d.getMonth(),d.getDate(),op.id);total+=calcH(h.inicio,h.fin);});
+    let total=0;
+    wd.forEach(d=>{const h=getH(d.getFullYear(),d.getMonth(),d.getDate(),op.id);total+=calcH(h.inicio,h.fin);});
     const pct=Math.min(total/TARGET*100,100);
-    const col=total>=TARGET?'var(--green)':total>=TARGET*.6?'var(--amber)':'var(--blue)';
-    const vcls=total>=TARGET?'style="color:var(--green)"':total>=TARGET*.6?'style="color:var(--amber)"':'';
-    html+=`<div class="op-h"><div class="op-h-name" title="${op.name}">${op.short}</div><div class="op-h-track"><div class="op-h-fill" style="width:${pct}%;background:${col}"></div></div><div class="op-h-val" ${vcls}>${total}h</div></div>`;
+    const over=total>TARGET,exact=total===TARGET;
+    const col=over?'var(--red)':exact?'var(--green)':total>=TARGET*0.75?'var(--amber)':'var(--blue)';
+    const lbl=over?' ⚠':exact?' ✓':'';
+    html+='<div style="display:flex;align-items:center;gap:6px;flex:1;min-width:130px;padding:6px 10px;background:rgba(255,255,255,0.06);border-radius:6px;border:1px solid var(--border2)">'
+      +'<div class="av" style="background:'+op.bg+';color:'+op.tc+';width:24px;height:24px;font-size:9px;flex-shrink:0">'+op.init+'</div>'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="font-size:10px;font-weight:600;color:var(--text)">'+op.short+'</div>'
+      +'<div style="height:6px;background:rgba(255,255,255,0.12);border-radius:3px;margin-top:3px;overflow:hidden">'
+      +'<div style="width:'+pct+'%;height:100%;background:'+col+';border-radius:3px;transition:width .4s"></div>'
+      +'</div></div>'
+      +'<div style="font-size:13px;font-weight:700;color:'+col+';flex-shrink:0;min-width:38px;text-align:right">'+total+'h'+lbl+'</div>'
+      +'</div>';
   });
-  document.getElementById('hours-content').innerHTML=html;
+  const el=document.getElementById('hours-content');
+  if(el)el.innerHTML=html;
 }
 function getWeekOfToday(){const d=new Date(today);const day=d.getDay();const mon=new Date(d);mon.setDate(d.getDate()-day+1);return Array.from({length:7},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x;});}
 
@@ -833,7 +845,7 @@ function openP(dks,opId){
     const btns=groups.map(g=>{const s=sel.has(g.id);return`<button class="gadd-btn${s?' sel':''}" style="${s?`background:${g.bg};color:${g.tc};border-color:${g.tc};border-style:solid`:''}" onclick="toggleG('${dks}','${op.id}','${g.id}')">${g.badge} ${g.name}</button>`;}).join('');
     const prev=arr.map(gid=>{const g=gG(gid);if(!g||!g.tasks.length)return'';return g.tasks.map((t,ti)=>{const td2=taskDetail[gid]&&taskDetail[gid][ti];const hasD=td2&&(td2.desc||td2.steps.length||td2.comments.length);return`<span class="ttag" style="background:${g.bg};color:${g.tc}" onclick="openTP('${gid}',${ti})">${t}${hasD?' <i class="ti ti-file-text" style="font-size:9px"></i>':' <i class="ti ti-edit" style="font-size:9px;opacity:.4"></i>'}</span>`;}).join('');}).join('');
     return`<div class="orow" id="orow-${op.id}"><div class="ohead"><div class="av-m" style="background:${op.bg};color:${op.tc}">${op.init}</div><div><div class="oname">${op.name}</div></div>${arr.length?`<span style="margin-left:auto;font-size:9px;background:var(--surface3);padding:2px 6px;border-radius:4px;color:var(--text3);border:1px solid var(--border)">${arr.map(gid=>gG(gid)?.badge||gid).join(' ')}</span>`:''}</div>
-    <div class="time-row"><span class="time-label"><i class="ti ti-clock"></i> Horario</span><input type="time" class="time-inp" value="${h.inicio||''}" onchange="updDayH('${dks}','${op.id}','inicio',this.value)" placeholder="09:00"><span style="font-size:11px;color:var(--text3)">→</span><input type="time" class="time-inp" value="${h.fin||''}" onchange="updDayH('${dks}','${op.id}','fin',this.value)" placeholder="18:00"><span class="time-hrs${hh>0?' ok':''}" id="hrs-${op.id}">${hh>0?hh+'h':''}</span></div>
+    <div class="time-row"><span class="time-label"><i class="ti ti-clock"></i> Horario</span>'+timeSelect('time-inp',h.inicio||'09:00',"updDayH('"+dks+"','"+op.id+"','inicio',this.value)")+'<span style="font-size:11px;color:var(--text3)">→</span>'+timeSelect('time-inp',h.fin||'18:00',"updDayH('"+op.id+"','"+op.id+"','fin',this.value)")+'<span class="time-hrs${hh>0?' ok':''}" id="hrs-${op.id}">${hh>0?hh+'h':''}</span></div>
     <div class="sl">Grupos asignados</div><div class="gchips" id="chips-${op.id}">${chips}</div><div class="sl">Añadir / quitar</div><div class="gadd" id="gadd-${op.id}">${btns}</div>${prev?`<div class="sl">Tareas</div><div class="task-preview" id="prev-${op.id}">${prev}</div>`:`<div id="prev-${op.id}"></div>`}</div>`;
   };
   let b=opId?renderOp(OPS.find(o=>o.id===opId)):`<div class="sl">Asigna grupos y horario por operador</div>`+OPS.map(renderOp).join('');
@@ -865,7 +877,15 @@ function updDayH(dks,opId,field,val){const{y,m,d}=pdk(dks);const h=getH(y,m,d,op
 async function saveAndClose(){if(curDayDk){const{y,m,d}=pdk(curDayDk);await saveBatch(OPS.map(op=>({y,m,d,opId:op.id})));}closeP();renderC();}
 function toggleG(dks,opId,gId){
   const{y,m,d}=pdk(dks);let arr=[...getArr(y,m,d,opId)];const idx=arr.indexOf(gId);
-  if(idx>=0)arr.splice(idx,1);else arr.push(gId);setArr(y,m,d,opId,arr);
+  if(idx>=0){
+    arr.splice(idx,1);
+    if(arr.length===0){setH(y,m,d,opId,{inicio:'',fin:''});}
+    else{const fg=gG(arr[0]);if(fg&&fg.hInicio)setH(y,m,d,opId,{inicio:fg.hInicio,fin:fg.hFin||'18:00'});}
+  } else {
+    arr.push(gId);
+    const g=gG(gId);if(g&&g.hInicio)setH(y,m,d,opId,{inicio:g.hInicio,fin:g.hFin||'18:00'});
+  }
+  setArr(y,m,d,opId,arr);
   const sel=new Set(arr);
   const cc=document.getElementById(`chips-${opId}`);if(cc)cc.innerHTML=arr.length?arr.map(gid=>{const g=gG(gid);return g?`<span class="gchip" style="background:${g.bg};color:${g.tc}">${g.badge} ${g.name}<span class="x" onclick="toggleG('${dks}','${opId}','${gid}')">×</span></span>`:''}).join(''):`<span class="gchip-empty">Sin grupos</span>`;
   const ga=document.getElementById(`gadd-${opId}`);if(ga)ga.innerHTML=groups.map(g=>{const s=sel.has(g.id);return`<button class="gadd-btn${s?' sel':''}" style="${s?`background:${g.bg};color:${g.tc};border-color:${g.tc};border-style:solid`:''}" onclick="toggleG('${dks}','${opId}','${g.id}')">${g.badge} ${g.name}</button>`;}).join('');
@@ -952,9 +972,9 @@ function renderROps(){
       <div class="av" style="background:${op.bg};color:${op.tc}">${op.init}</div>
       <span style="font-size:12px;font-weight:500;color:var(--text);flex:1">${op.name}</span>
       ${sel?`<div class="op-row-times" onclick="event.stopPropagation()">
-        <input type="time" class="tinp" value="${h.inicio}" onchange="rSetH('${op.id}','inicio',this.value)">
+        ${timeSelect('tinp',h.inicio,"rSetH('"+op.id+"','inicio',this.value)")}
         <span style="font-size:10px;color:var(--text3)">→</span>
-        <input type="time" class="tinp" value="${h.fin}" onchange="rSetH('${op.id}','fin',this.value)">
+        ${timeSelect('tinp',h.fin,"rSetH('"+op.id+"','fin',this.value)")}
         <span class="op-hrs-badge" style="background:${hc}20;color:${hc}">${hh}h</span>
       </div>`:''}
     </div>`;
@@ -1036,7 +1056,8 @@ function renderGB(){
     const taskBgH=g.bg.startsWith('#')?hexToRgba(g.bg,0.22):'rgba(255,255,255,0.1)';
     h+=`<div class="gcard" style="border:2px solid ${g.bg};border-radius:10px"><div class="gcard-hd" style="background:${g.bg};border-bottom:2px solid ${g.bg}"><span class="gbg" style="background:${g.bg};color:${g.tc}" onclick="editBadge(${gi})" title="Clic para editar badge">${g.badge}</span><input class="gni" value="${g.name}" onchange="groups[${gi}].name=this.value;renderLeg()" onblur="saveGrupo(groups[${gi}])">${!isSys?`<button class="db3" onclick="delG(${gi})"><i class="ti ti-trash"></i></button>`:''}</div>`;
     if(!isSys){
-      h+=`<div class="gcard-body"><div class="task-list" id="tl-${g.id}">`;
+      const ghh=calcH(g.hInicio||'09:00',g.hFin||'18:00');
+      h+=`<div class="gcard-body"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:6px 10px;background:var(--surface3);border-radius:6px;border:1px solid var(--border)"><span style="font-size:10px;color:var(--text3);font-weight:500">⏰ Horario por defecto</span>${timeSelect('tinp',g.hInicio||'09:00',"groups["+gi+"].hInicio=this.value;saveGrupo(groups["+gi+"])")}<span style="font-size:10px;color:var(--text3)">→</span>${timeSelect('tinp',g.hFin||'18:00',"groups["+gi+"].hFin=this.value;saveGrupo(groups["+gi+"])")}<span style="font-size:10px;font-weight:600;color:var(--blue)">${ghh}h</span></div><div class="task-list" id="tl-${g.id}">`;
       g.tasks.forEach((t,ti)=>{
         const td2=taskDetail[g.id]&&taskDetail[g.id][ti];
         const hasD=td2&&(td2.desc||td2.steps.length||td2.comments.length);
@@ -1286,6 +1307,8 @@ function renderTeam(){
 function addOp(){const i=OPS.length%OP_COLORS.length;const n=OPS.length+1;OPS.push({id:'op'+Date.now(),name:'Operador '+n,short:'Op'+n,init:'O'+n,bg:OP_COLORS[i].bg,tc:OP_COLORS[i].tc});renderTeam();}
 function removeOp(i){if(OPS.length<=1){alert('Debe haber al menos un integrante.');return;}if(!confirm('¿Eliminar a '+OPS[i].name+'?'))return;OPS.splice(i,1);renderTeam();}
 
+const TIME_OPTS=(()=>{const o=[];for(let h=0;h<24;h++)for(let m of[0,30])o.push((h<10?'0':'')+h+':'+(m===0?'00':'30'));return o;})();
+function timeSelect(cls,val,onchange,style){style=style||'';return '<select class="'+cls+'" style="'+style+'" onchange="'+onchange+'" onclick="event.stopPropagation()">'+TIME_OPTS.map(function(t){return'<option value="'+t+'"'+(t===val?' selected':'')+'>'+t+'</option>';}).join('')+'</select>';}
 loadAll();
 </script>
 </body>
