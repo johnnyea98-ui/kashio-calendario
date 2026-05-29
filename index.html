@@ -2,11 +2,13 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kashio Payment Operations</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -254,7 +256,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .clearbtn:hover{color:var(--red);border-color:#5A2020}
 .time-row{display:flex;align-items:center;gap:8px;margin-top:6px;padding:7px 10px;background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--border)}
 .time-label{font-size:10px;color:var(--text3);min-width:58px;font-weight:500}
-.time-inp{font-size:11px;padding:5px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface3);color:var(--text);font-family:inherit;width:92px;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238896A7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;padding-right:20px}
+.time-inp{font-size:11px;padding:4px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface3);color:var(--text);font-family:inherit;width:88px}
 .time-inp:focus{outline:none;border-color:var(--blue)}
 .time-hrs{font-size:11px;color:var(--text3);margin-left:auto}
 .time-hrs.ok{color:var(--green);font-weight:500}
@@ -278,14 +280,13 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .rc-day{text-align:center;font-size:11px;padding:6px 2px;border-radius:5px;cursor:pointer;color:var(--text2);transition:all .15s;position:relative;user-select:none}
 .rc-day:hover:not(.rc-other){background:var(--surface3)}
 .rc-day.rc-other{color:var(--border2);pointer-events:none}
-.rc-day.rc-in-range{background:#DDEEFF;color:#185FA5}
-.rc-day.rc-start,.rc-day.rc-end{background:#185FA5 !important;color:#fff !important;font-weight:700;box-shadow:0 0 0 3px #185FA5}
-.rc-day.rc-start{border-radius:6px 0 0 6px}
-.rc-day.rc-end{border-radius:0 6px 6px 0}
-.rc-day.rc-start.rc-end{border-radius:6px}
+.rc-day.rc-in-range{background:var(--blue-l);color:var(--blue)}
+.rc-day.rc-start,.rc-day.rc-end{background:var(--blue);color:#fff;font-weight:600}
+.rc-day.rc-start{border-radius:5px 0 0 5px}
+.rc-day.rc-end{border-radius:0 5px 5px 0}
+.rc-day.rc-start.rc-end{border-radius:5px}
 .rc-day.rc-today{font-weight:700;color:var(--amber)}
-.rc-day.rc-today.rc-start,.rc-day.rc-today.rc-end{color:#fff !important}
-.rc-day:not(.rc-other):not(.rc-start):not(.rc-end):not(.rc-in-range):hover{background:#E8F0FF;cursor:pointer}
+.rc-day.rc-today.rc-start,.rc-day.rc-today.rc-end{color:#fff}
 .range-info{display:flex;align-items:center;gap:8px;padding:8px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--text2)}
 .range-info b{color:var(--text)}
 .range-tag{background:var(--blue-l);color:var(--blue);padding:1px 7px;border-radius:4px;font-size:10px;font-weight:500}
@@ -298,10 +299,8 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .op-row:hover{background:#F5F8FF}
 .op-row.sel{background:#FAFCFF}
 .op-row-times{display:flex;align-items:center;gap:5px;margin-left:auto}
-.tinp{font-size:11px;padding:4px 8px;border-radius:var(--radius-sm);border:1px solid #E2E6ED;background:#FFFFFF;color:#0F1923;font-family:inherit;width:82px;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238896A7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;padding-right:20px}
+.tinp{font-size:10px;padding:3px 7px;border-radius:var(--radius-sm);border:1px solid #E2E6ED;background:#FFFFFF;color:#0F1923;font-family:inherit;width:76px}
 .tinp:focus{outline:none;border-color:var(--blue)}
-.time-inp-day{font-size:11px;padding:5px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface3);color:var(--text);font-family:inherit;width:88px;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238896A7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;padding-right:20px}
-.time-inp-day:focus{outline:none;border-color:var(--blue)}
 .op-hrs-badge{font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;min-width:34px;text-align:center}
 .chk-opts{display:flex;gap:14px;flex-wrap:wrap}
 .chk-opt{display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer;color:var(--text2)}
@@ -467,9 +466,12 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
       <button class="vtab on" id="tm" onclick="sv('month')">Mes</button>
       <button class="vtab" id="tw" onclick="sv('week')">Semana</button>
     </div>
-    <button class="btn" id="export-btn" onclick="exportWeekExcel()" style="display:none;color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-file-spreadsheet"></i> Exportar semana</button>
   </div>
-
+  <div class="hours-bar">
+    <span class="hb-title"><i class="ti ti-clock"></i> Horas semana</span>
+    <div id="hours-content" style="display:flex;gap:14px;flex:1;flex-wrap:wrap"></div>
+    <span style="font-size:10px;color:var(--text3);flex-shrink:0">Meta <b style="color:var(--text)">48h</b>/sem</span>
+  </div>
   <div class="legend" id="leg"></div>
   <div id="cal"></div>
 </main>
@@ -539,10 +541,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
   </div>
   <div class="rp-ft">
     <button class="apply-btn" onclick="applyRange()"><i class="ti ti-check"></i> Aplicar asignación</button>
-    <div style="display:flex;gap:6px">
-      <button class="clear-btn" style="flex:1" onclick="clearRange()"><i class="ti ti-trash"></i> Borrar asignaciones del rango</button>
-      <button class="clear-btn" style="flex:1;color:#F56565;border-color:#5A2020" onclick="clearAllRange()"><i class="ti ti-circle-x"></i> Limpiar todo</button>
-    </div>
+    <button class="clear-btn" onclick="clearRange()"><i class="ti ti-trash"></i> Borrar asignaciones del rango</button>
   </div>
 </div>
 
@@ -577,7 +576,6 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
   </div>
 </div>
 <script>
-
 const SUPA_URL='https://csthgljcamrkklmnhcqz.supabase.co';
 const SUPA_KEY='sb_publishable_uJOV1rowXYxFUF-_9bk2tg_khtNDBRK';
 const{createClient}=supabase;
@@ -592,16 +590,12 @@ let OPS=[
   {id:'jessica',name:'Jessica',       short:'Jess',  init:'JE', bg:'var(--jessica)',tc:'var(--jessica-t)'},
   {id:'diana',  name:'Diana',         short:'Diana', init:'DI', bg:'var(--diana)',   tc:'var(--diana-t)'},
 ];
-const TIME_OPTS=(()=>{const o=[];for(let h=0;h<24;h++)for(let m of[0,30])o.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);return o;})();
-function timeSelect(cls,val,onchange,style=''){return '<select class="'+cls+'" style="'+style+'" onchange="'+onchange+'" onclick="event.stopPropagation()">'+TIME_OPTS.map(t=>'<option value="'+t+'"'+(t===val?' selected':'')+'>'+t+'</option>').join('')+'</select>';}
 const FREQS=['c/hora','1×día','Inicio jornada','Cierre jornada','Ocasional','Sábados','Domingos'];
 async function loadTeamDB(){
   try{
-    const{data,error}=await db.from('equipo').select('*');
-    if(error||!data||data.length===0) return;
-    const team=data
-      .sort((a,b)=>(a.orden||0)-(b.orden||0))
-      .map(r=>({id:r.id,name:r.nombre,short:r.short||r.nombre.split(' ')[0],init:r.init,bg:r.color_bg,tc:r.color_tc}));
+    const{data,error}=await db.from('equipo').select('*').order('orden');
+    if(error||!data||data.length===0) return; // keep defaults if table empty
+    const team=data.map(r=>({id:r.id,name:r.nombre,short:r.short,init:r.init,bg:r.color_bg,tc:r.color_tc}));
     OPS.splice(0,OPS.length,...team);
   }catch(e){console.warn('Could not load team:',e);}
 }
@@ -645,19 +639,10 @@ function pdk(s){const p=s.split('-');return{y:+p[0],m:+p[1],d:+p[2]};}
 function getArr(y,m,d,op){return asgn[ak(y,m,d,op)]||[];}
 function setArr(y,m,d,op,arr){if(arr.length)asgn[ak(y,m,d,op)]=arr;else delete asgn[ak(y,m,d,op)];}
 function getH(y,m,d,op){return hrs[ak(y,m,d,op)]||{inicio:'',fin:''};}
-function setH(y,m,d,op,h){if(h&&(h.inicio||h.fin)){hrs[ak(y,m,d,op)]={inicio:h.inicio||'',fin:h.fin||''};}else{delete hrs[ak(y,m,d,op)];}}
+function setH(y,m,d,op,h){if(h.inicio||h.fin)hrs[ak(y,m,d,op)]=h;else delete hrs[ak(y,m,d,op)];}
 function getTD(gid,ti){if(!taskDetail[gid])taskDetail[gid]={};if(!taskDetail[gid][ti])taskDetail[gid][ti]={name:gG(gid)?.tasks[ti]||'',desc:'',steps:[],freq:'',comments:[]};return taskDetail[gid][ti];}
 function dateToISO(y,m,d){return`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
-function calcH(a,b){
-  if(!a||!b)return 0;
-  const[h1,m1]=a.split(':').map(Number),[h2,m2]=b.split(':').map(Number);
-  let mins=(h2*60+m2)-(h1*60+m1);
-  if(mins<0)mins+=1440;
-  const total=Math.round(mins/60*10)/10;
-  // Solo descontar 1h de almuerzo para el turno estándar 09:00→18:00
-  if(a==='09:00'&&b==='18:00') return 8;
-  return total;
-}
+function calcH(a,b){if(!a||!b)return 0;const[h1,m1]=a.split(':').map(Number),[h2,m2]=b.split(':').map(Number);let mins=(h2*60+m2)-(h1*60+m1);if(mins<0)mins+=1440;const t=Math.round(mins/60*10)/10;if(a==='09:00'&&b==='18:00')return 8;return t;}
 
 // SYNC
 function setSyncing(s){const dot=document.getElementById('sync-dot'),txt=document.getElementById('sync-text');if(s==='saving'){dot.className='sync-dot saving';txt.textContent='Guardando...';}else if(s==='ok'){dot.className='sync-dot';txt.textContent='Sincronizado';}else{dot.className='sync-dot error';txt.textContent='Error';}}
@@ -665,41 +650,20 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 
 // LOAD
 async function loadAll(){
-  console.log('loadAll starting...');
   try{
-    // Test connection first
-    console.log('Testing Supabase connection...');
     // Load groups
     const{data:gData,error:gErr}=await db.from('grupos').select('*').order('orden');
-    console.log('grupos result:', gData, gErr);
     if(gErr)throw gErr;
-    // Default hours per group (can be overridden per day)
-    const GROUP_HOURS={'g1':['09:00','18:00'],'g2':['09:00','18:00'],'g3':['09:00','18:00'],'g4':['09:00','18:00'],'gsat':['09:00','18:00'],'gdom':['09:00','18:00'],'off':['',''],'vac':['','']};
-    groups=gData.map(g=>{
-      const dh=GROUP_HOURS[g.id]||['09:00','18:00'];
-      return{id:g.id,badge:g.badge,name:g.nombre,bg:g.color_bg,tc:g.color_tc,
-        hInicio:g.hora_inicio||dh[0],hFin:g.hora_fin||dh[1],
-        tasks:Array.isArray(g.tareas)?g.tareas:JSON.parse(g.tareas||'[]')};
-    });
+    groups=gData.map(g=>({id:g.id,badge:g.badge,name:g.nombre,bg:g.color_bg,tc:g.color_tc,tasks:Array.isArray(g.tareas)?g.tareas:JSON.parse(g.tareas||'[]')}));
     // Load task details
     const{data:tdData}=await db.from('tareas_detalle').select('*');
     if(tdData)tdData.forEach(td=>{if(!taskDetail[td.grupo_id])taskDetail[td.grupo_id]={};taskDetail[td.grupo_id][td.tarea_idx]={name:td.nombre,desc:td.descripcion,freq:td.frecuencia,steps:Array.isArray(td.pasos)?td.pasos:JSON.parse(td.pasos||'[]'),comments:Array.isArray(td.comentarios)?td.comentarios:JSON.parse(td.comentarios||'[]')};});
     // Load team from Supabase
     await loadTeamDB();
     await loadAsgn(cy,cm);
-    console.log('All loaded OK, hiding loading screen');
     document.getElementById('loading').classList.add('hide');
     renderC();
-  }catch(e){
-    console.error('loadAll error:',e);
-    const msg=e.message||String(e);
-    document.getElementById('loading').innerHTML=`<div style="color:#F56565;font-size:13px;text-align:center;padding:20px;max-width:400px">
-      <i class="ti ti-alert-circle" style="font-size:32px"></i><br><br>
-      <b>Error al conectar</b><br>
-      <div style="font-size:11px;color:#8896A7;margin:8px 0;word-break:break-all">${msg}</div>
-      <button onclick="loadAll()" style="margin-top:12px;padding:8px 16px;background:#185FA5;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px">Reintentar</button>
-    </div>`;
-  }
+  }catch(e){document.getElementById('loading').innerHTML=`<div style="color:var(--red);font-size:13px;text-align:center;padding:20px"><i class="ti ti-alert-circle" style="font-size:28px"></i><br><br>Error al conectar<br><small style="color:var(--text3)">${e.message}</small><br><br><button class="btn" onclick="loadAll()">Reintentar</button></div>`;}
 }
 async function loadAsgn(y,m){
   const from=dateToISO(y,m,1),to=dateToISO(y,m,new Date(y,m+1,0).getDate());
@@ -709,41 +673,14 @@ async function loadAsgn(y,m){
 async function saveBatch(entries){
   setSyncing('saving');
   try{
-    const up=[],delFechas=[];
-    entries.forEach(({y,m,d,opId})=>{
-      const arr=getArr(y,m,d,opId),fecha=dateToISO(y,m,d),h=getH(y,m,d,opId);
-      if(arr.length) up.push({fecha,operador_id:opId,grupos:arr,hora_inicio:h.inicio||null,hora_fin:h.fin||null,updated_at:new Date().toISOString()});
-      else delFechas.push({fecha,opId});
-    });
-    // Single upsert for all updates
-    if(up.length) await db.from('asignaciones').upsert(up,{onConflict:'fecha,operador_id'});
-    // Batch deletes grouped by date
-    if(delFechas.length){
-      const pairs=delFechas.map(({fecha,opId})=>`and(fecha.eq.${fecha},operador_id.eq.${opId})`);
-      // Delete in chunks of 20 to avoid URL length limits
-      for(let i=0;i<pairs.length;i+=20){
-        const chunk=delFechas.slice(i,i+20);
-        for(const{fecha,opId} of chunk){
-          await db.from('asignaciones').delete().eq('fecha',fecha).eq('operador_id',opId);
-        }
-      }
-    }
-    setSyncing('ok');
-    showToast(`✓ ${entries.length} registro${entries.length!==1?'s':''} guardado${entries.length!==1?'s':''}`);
+    const up=[],del=[];
+    entries.forEach(({y,m,d,opId})=>{const arr=getArr(y,m,d,opId),fecha=dateToISO(y,m,d),h=getH(y,m,d,opId);if(arr.length)up.push({fecha,operador_id:opId,grupos:arr,hora_inicio:h.inicio||null,hora_fin:h.fin||null,updated_at:new Date().toISOString()});else del.push({fecha,opId});});
+    if(up.length)await db.from('asignaciones').upsert(up,{onConflict:'fecha,operador_id'});
+    for(const{fecha,opId}of del)await db.from('asignaciones').delete().eq('fecha',fecha).eq('operador_id',opId);
+    setSyncing('ok');showToast(`✓ ${entries.length} asignaciones guardadas`);
   }catch(e){console.error(e);setSyncing('error');showToast('Error al guardar');}
 }
-async function saveGrupo(g){
-  setSyncing('saving');
-  try{
-    await db.from('grupos').upsert({
-      id:g.id,badge:g.badge,nombre:g.name,
-      color_bg:g.bg,color_tc:g.tc,tareas:g.tasks,
-      hora_inicio:g.hInicio||null,hora_fin:g.hFin||null,
-      updated_at:new Date().toISOString()
-    },{onConflict:'id'});
-    setSyncing('ok');
-  }catch(e){console.error(e);setSyncing('error');}
-}
+async function saveGrupo(g){setSyncing('saving');try{await db.from('grupos').upsert({id:g.id,badge:g.badge,nombre:g.name,color_bg:g.bg,color_tc:g.tc,tareas:g.tasks,updated_at:new Date().toISOString()},{onConflict:'id'});setSyncing('ok');}catch(e){console.error(e);setSyncing('error');}}
 async function deleteGrupo(id){try{await db.from('grupos').delete().eq('id',id);}catch(e){console.error(e);}}
 async function saveTD(gid,ti){const td=getTD(gid,ti);setSyncing('saving');try{await db.from('tareas_detalle').upsert({grupo_id:gid,tarea_idx:ti,nombre:td.name,descripcion:td.desc,frecuencia:td.freq,pasos:td.steps,comentarios:td.comments,updated_at:new Date().toISOString()},{onConflict:'grupo_id,tarea_idx'});setSyncing('ok');}catch(e){console.error(e);setSyncing('error');}}
 
@@ -783,136 +720,63 @@ function dayChipsHtml(y,m,d){
   return h;
 }
 function renderMonth(){
-  // Monday-first: shift getDay() so Mon=0 ... Sun=6
-  const raw=new Date(cy,cm,1).getDay(); // 0=Sun,1=Mon,...,6=Sat
-  const fd=(raw===0)?6:raw-1;          // Mon=0,Tue=1,...,Sun=6
-  const dim=new Date(cy,cm+1,0).getDate();
-  const dip=new Date(cy,cm,0).getDate();
+  const fd=new Date(cy,cm,1).getDay(),dim=new Date(cy,cm+1,0).getDate(),dip=new Date(cy,cm,0).getDate();
   let h=`<div class="cal"><div class="cal-grid">`;
-  ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach((d,i)=>h+=`<div class="dh${i>=5?' we':''}">${d}</div>`);
+  DY.forEach((d,i)=>h+=`<div class="dh${i===0||i===6?' we':''}">${d}</div>`);
   const cells=Math.ceil((fd+dim)/7)*7;
   for(let i=0;i<cells;i++){
     let d,mo=cm,y=cy,om=false;
     if(i<fd){d=dip-fd+i+1;mo=cm-1;om=true;if(mo<0){mo=11;y--;}}
     else if(i>=fd+dim){d=i-fd-dim+1;mo=cm+1;om=true;if(mo>11){mo=0;y++;}}
     else d=i-fd+1;
-    // column index: 0=Mon...4=Fri,5=Sat,6=Sun
-    const col=i%7; // 0-6 where 5,6 = weekend
-    const we=col>=5;
-    const isT=!om&&d===today.getDate()&&cm===today.getMonth()&&cy===today.getFullYear();
+    const wd=i%7,we=wd===0||wd===6,isT=!om&&d===today.getDate()&&cm===today.getMonth()&&cy===today.getFullYear();
     const dks=dk(y,mo,d);
     let chips='';if(!om){chips=dayChipsHtml(y,mo,d);if(!chips)chips=`<div class="hint">+ asignar</div>`;}
     h+=`<div class="dc${om?' om':''}${we?' wec':''}${isT?' tod':''}" onclick="openP('${dks}',null)"><div class="dn">${d}</div>${chips}</div>`;
   }
   return h+`</div></div>`;
 }
-function wkDates2(){
-  // Find Monday of the current week in view
-  const base=new Date(cy,cm,1);
-  const dow=base.getDay(); // 0=Sun
-  const diffToMon=(dow===0)?-6:1-dow; // days to go back to Monday
-  const mon=new Date(base);
-  mon.setDate(base.getDate()+diffToMon+woff*7);
-  return Array.from({length:7},(_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return d;});
-}
+function wkDates2(){const s=new Date(cy,cm,1);s.setDate(s.getDate()-s.getDay()+woff*7);return Array.from({length:7},(_,i)=>{const d=new Date(s);d.setDate(s.getDate()+i);return d;});}
 function renderWeek(){
   const dates=wkDates2();
-  const WN=['Lun','Mar','Mi\u00e9','Jue','Vie','S\u00e1b','Dom'];
-  let hoursHtml='<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;margin-bottom:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><span style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;flex-shrink:0"><i class="ti ti-clock"></i> Horas semana</span>';
+  let h=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px"><button class="btn icon" onclick="woff--;renderC(true)"><i class="ti ti-chevron-left"></i></button><span style="font-size:12px;color:var(--text3)">${dates[0].getDate()}/${dates[0].getMonth()+1} – ${dates[6].getDate()}/${dates[6].getMonth()+1}</span><button class="btn icon" onclick="woff++;renderC(true)"><i class="ti ti-chevron-right"></i></button></div><div class="wg"><div class="wh">Op.</div>`;
+  dates.forEach((d,i)=>{const isT=d.getDate()===today.getDate()&&d.getMonth()===today.getMonth()&&d.getFullYear()===today.getFullYear();const we=i===0||i===6;h+=`<div class="wh${we?' we':''}" style="${isT?'color:var(--amber);font-weight:700':''}">${DY[d.getDay()]} ${d.getDate()}</div>`;});
+  h+=`</div>`;
   OPS.forEach(op=>{
-    let total=0;
-    dates.forEach(d=>{const h2=getH(d.getFullYear(),d.getMonth(),d.getDate(),op.id);total+=calcH(h2.inicio,h2.fin);});
-    const pct=Math.min(total/TARGET*100,100);
-    const over=total>TARGET;
-    const exact=total===TARGET;
-    const col=over?'var(--red)':exact?'var(--green)':total>=TARGET*0.75?'var(--amber)':'var(--blue)';
-    const vcol=over?'color:var(--red)':exact?'color:var(--green)':total>=TARGET*0.75?'color:var(--amber)':'';
-    const lbl=over?' ⚠':exact?' ✓':'';
-    hoursHtml+='<div style="display:flex;align-items:center;gap:6px;flex:1;min-width:130px">'
-      +'<div style="width:22px;height:22px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0">'+op.init+'</div>'
-      +'<div style="flex:1;height:6px;background:var(--surface3);border-radius:3px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+col+';border-radius:3px"></div></div>'
-      +'<span style="font-size:11px;font-weight:600;min-width:42px;'+vcol+'">'+total+'h'+lbl+'</span>'
-      +'</div>';
-  });
-  hoursHtml+='<span style="font-size:10px;color:var(--text3);flex-shrink:0">Meta <b style="color:var(--text)">48h</b></span></div>';
-  let h='<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px">'
-    +'<button class="btn icon" onclick="woff--;renderC(true)"><i class="ti ti-chevron-left"></i></button>'
-    +'<span style="font-size:12px;color:var(--text3)">'+dates[0].getDate()+'/'+(dates[0].getMonth()+1)+' \u2013 '+dates[6].getDate()+'/'+(dates[6].getMonth()+1)+'</span>'
-    +'<button class="btn icon" onclick="woff++;renderC(true)"><i class="ti ti-chevron-right"></i></button>'
-    +'</div>'+hoursHtml;
-  h+='<div class="wg"><div class="wh">Op.</div>';
-  dates.forEach((d,i)=>{
-    const isT=d.getDate()===today.getDate()&&d.getMonth()===today.getMonth()&&d.getFullYear()===today.getFullYear();
-    const we=i>=5;
-    h+='<div class="wh'+(we?' we':'')+'" style="'+(isT?'color:var(--amber);font-weight:700':'')+'">'+WN[i]+' '+d.getDate()+'</div>';
-  });
-  h+='</div>';
-  OPS.forEach(op=>{
-    h+='<div class="wg"><div class="wop"><div class="av" style="background:'+op.bg+';color:'+op.tc+'">'+op.init+'</div><span>'+op.short+'</span></div>';
+    h+=`<div class="wg"><div class="wop"><div class="av" style="background:${op.bg};color:${op.tc}">${op.init}</div><span>${op.short}</span></div>`;
     dates.forEach(d=>{
       const y=d.getFullYear(),mo=d.getMonth(),day=d.getDate(),dks=dk(y,mo,day);
-      const arr=getArr(y,mo,day,op.id),wec2=d.getDay()===0||d.getDay()===6;
+      const arr=getArr(y,mo,day,op.id),we=d.getDay()===0||d.getDay()===6;
       const firstG=arr.length?gG(arr[0]):null;
       const badges=arr.map(gid=>{const g=gG(gid);return g?g.badge:''}).filter(Boolean).join(' ');
       const hh=calcH(getH(y,mo,day,op.id).inicio,getH(y,mo,day,op.id).fin);
-      const wec=d.getDay()===0||d.getDay()===6;
-      h+='<div class="wdc'+(wec?' wec':'')+'" style="'+(firstG?'background:'+firstG.bg+';color:'+firstG.tc:'')+'" onclick="openP(\''+dks+'\',\''+op.id+'\')">'
-        +(firstG?'<span class="wbadge" style="background:'+firstG.bg+';color:'+firstG.tc+'">'+badges+'</span>':'<span style="font-size:16px;color:var(--border2)">+</span>')
-        +(hh>0?'<span class="w-hours">'+hh+'h</span>':'')
-        +'</div>';
+      h+=`<div class="wdc${we?' wec':''}" style="${firstG?`background:${firstG.bg};color:${firstG.tc}`:''}" onclick="openP('${dks}','${op.id}')">${firstG?`<span class="wbadge" style="background:${firstG.bg};color:${firstG.tc}">${badges}</span>`:''}<span style="font-size:16px;color:var(--border2)">${firstG?'':'+'}</span>${hh>0?`<span class="w-hours">${hh}h</span>`:''}</div>`;
     });
-    h+='</div>';
+    h+=`</div>`;
   });
   return h;
 }
-let _lastY=null,_lastM=null;
+let _lY=null,_lM=null;
 async function renderC(force){
-  try{
-    document.getElementById('mtitle').textContent=`${MO[cm]} ${cy}`;
-    if(force||_lastY!==cy||_lastM!==cm){await loadAsgn(cy,cm);_lastY=cy;_lastM=cm;}
-    document.getElementById('cal').innerHTML=view==='month'?renderMonth():renderWeek();
-    renderLeg();
-  }catch(e){console.error('renderC error:',e);}
+  document.getElementById('mtitle').textContent=`${MO[cm]} ${cy}`;
+  if(force||_lY!==cy||_lM!==cm){await loadAsgn(cy,cm);_lY=cy;_lM=cm;}
+  document.getElementById('cal').innerHTML=view==='month'?renderMonth():renderWeek();
+  renderLeg();
 }
 async function chM(d){cm+=d;if(cm>11){cm=0;cy++;}if(cm<0){cm=11;cy--;}woff=0;await renderC(true);}
-function goT(){
-  cy=today.getFullYear();cm=today.getMonth();
-  if(view==='week'){
-    const base=new Date(cy,cm,1);
-    const dow=base.getDay();
-    const diffToMon=(dow===0)?-6:1-dow;
-    const firstMon=new Date(base);firstMon.setDate(base.getDate()+diffToMon);
-    const td=new Date(today);const tdow=td.getDay();
-    const tdiffToMon=(tdow===0)?-6:1-tdow;
-    const todayMon=new Date(td);todayMon.setDate(td.getDate()+tdiffToMon);
-    woff=Math.round((todayMon-firstMon)/(7*24*60*60*1000));
-  } else {
-    woff=0;
-  }
-  renderC(true);
-}
+function goT(){cy=today.getFullYear();cm=today.getMonth();woff=0;renderC(true);}
 function sv(v){
   if(v==='week'){
-    // Calculate woff so current week is shown
-    const base=new Date(cy,cm,1);
-    const dow=base.getDay();
-    const diffToMon=(dow===0)?-6:1-dow;
-    const firstMon=new Date(base);
-    firstMon.setDate(base.getDate()+diffToMon);
-    // Find Monday of today's week
-    const td=new Date(today);
-    const tdow=td.getDay();
-    const tdiffToMon=(tdow===0)?-6:1-tdow;
-    const todayMon=new Date(td);
-    todayMon.setDate(td.getDate()+tdiffToMon);
-    // woff = number of weeks between firstMon and todayMon
-    const diff=Math.round((todayMon-firstMon)/(7*24*60*60*1000));
-    woff=diff;
+    const base=new Date(cy,cm,1);const dow=base.getDay();const d2m=(dow===0)?-6:1-dow;
+    const fMon=new Date(base);fMon.setDate(base.getDate()+d2m);
+    const td=new Date(today);const tdow=td.getDay();const td2m=(tdow===0)?-6:1-tdow;
+    const tMon=new Date(td);tMon.setDate(td.getDate()+td2m);
+    woff=Math.round((tMon-fMon)/(7*24*60*60*1000));
   }
   view=v;
   document.getElementById('tm').classList.toggle('on',v==='month');
   document.getElementById('tw').classList.toggle('on',v==='week');
-  renderC(true);
+  renderC();
 }
 
 // DAY PANEL
@@ -922,62 +786,34 @@ function openP(dks,opId){
   document.getElementById('pt').textContent=opId?OPS.find(o=>o.id===opId)?.name:`${DY[wd]} ${d} de ${MO[m]} ${y}`;
   document.getElementById('ps').textContent=opId?`${DY[wd]} ${d} de ${MO[m]} ${y}${we?' · Fin de semana':''}`:`${y}${we?' · Fin de semana':''}`;
   const renderOp=(op)=>{
-    const arr=getArr(y,m,d,op.id),sel=new Set(arr);
-    // Auto-init hours from first group default if not set
-    let h=getH(y,m,d,op.id);
-    if((!h.inicio||!h.fin)&&arr.length>0){
-      const fg=gG(arr[0]);
-      if(fg&&fg.hInicio){h={inicio:fg.hInicio,fin:fg.hFin||'18:00'};setH(y,m,d,op.id,h);}
-    }
-    const hh=calcH(h.inicio,h.fin);
+    const arr=getArr(y,m,d,op.id),sel=new Set(arr),h=getH(y,m,d,op.id),hh=calcH(h.inicio,h.fin);
     const chips=arr.length?arr.map(gid=>{const g=gG(gid);return g?`<span class="gchip" style="background:${g.bg};color:${g.tc}">${g.badge} ${g.name}<span class="x" onclick="toggleG('${dks}','${op.id}','${gid}')">×</span></span>`:''}).join(''):`<span class="gchip-empty">Sin grupos — elige abajo</span>`;
     const btns=groups.map(g=>{const s=sel.has(g.id);return`<button class="gadd-btn${s?' sel':''}" style="${s?`background:${g.bg};color:${g.tc};border-color:${g.tc};border-style:solid`:''}" onclick="toggleG('${dks}','${op.id}','${g.id}')">${g.badge} ${g.name}</button>`;}).join('');
     const prev=arr.map(gid=>{const g=gG(gid);if(!g||!g.tasks.length)return'';return g.tasks.map((t,ti)=>{const td2=taskDetail[gid]&&taskDetail[gid][ti];const hasD=td2&&(td2.desc||td2.steps.length||td2.comments.length);return`<span class="ttag" style="background:${g.bg};color:${g.tc}" onclick="openTP('${gid}',${ti})">${t}${hasD?' <i class="ti ti-file-text" style="font-size:9px"></i>':' <i class="ti ti-edit" style="font-size:9px;opacity:.4"></i>'}</span>`;}).join('');}).join('');
     return`<div class="orow" id="orow-${op.id}"><div class="ohead"><div class="av-m" style="background:${op.bg};color:${op.tc}">${op.init}</div><div><div class="oname">${op.name}</div></div>${arr.length?`<span style="margin-left:auto;font-size:9px;background:var(--surface3);padding:2px 6px;border-radius:4px;color:var(--text3);border:1px solid var(--border)">${arr.map(gid=>gG(gid)?.badge||gid).join(' ')}</span>`:''}</div>
-    <div class="time-row"><span class="time-label"><i class="ti ti-clock"></i> Horario</span>${timeSelect('time-inp',h.inicio||'09:00','updDayH(\'' + dks + '\',\'' + op.id + '\',\'inicio\',this.value)')}<span style="font-size:11px;color:var(--text3)">→</span>${timeSelect('time-inp',h.fin||'18:00','updDayH(\'' + dks + '\',\'' + op.id + '\',\'fin\',this.value)')}<span class="time-hrs${hh>0?' ok':''}" id="hrs-${op.id}">${hh>0?hh+'h':''}</span></div>
+    <div class="time-row"><span class="time-label"><i class="ti ti-clock"></i> Horario</span><input type="time" class="time-inp" value="${h.inicio||''}" onchange="updDayH('${dks}','${op.id}','inicio',this.value)" placeholder="09:00"><span style="font-size:11px;color:var(--text3)">→</span><input type="time" class="time-inp" value="${h.fin||''}" onchange="updDayH('${dks}','${op.id}','fin',this.value)" placeholder="18:00"><span class="time-hrs${hh>0?' ok':''}" id="hrs-${op.id}">${hh>0?hh+'h':''}</span></div>
     <div class="sl">Grupos asignados</div><div class="gchips" id="chips-${op.id}">${chips}</div><div class="sl">Añadir / quitar</div><div class="gadd" id="gadd-${op.id}">${btns}</div>${prev?`<div class="sl">Tareas</div><div class="task-preview" id="prev-${op.id}">${prev}</div>`:`<div id="prev-${op.id}"></div>`}</div>`;
   };
   let b=opId?renderOp(OPS.find(o=>o.id===opId)):`<div class="sl">Asigna grupos y horario por operador</div>`+OPS.map(renderOp).join('');
-  // Build day summary (only when viewing full day, not single operator)
   let summary='';
   if(!opId){
     const assigned=OPS.filter(op=>getArr(y,m,d,op.id).length>0);
     if(assigned.length>0){
       summary='<div style="background:#F5F8FF;border:1px solid #E2E6ED;border-radius:8px;padding:12px 14px;margin-bottom:14px">';
       summary+='<div style="font-size:10px;font-weight:600;color:#8896A7;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Resumen del día</div>';
-      summary+='<div style="display:flex;flex-direction:column;gap:8px">';
+      summary+='<div style="display:flex;flex-direction:column;gap:6px">';
       assigned.forEach(op=>{
         const arr=getArr(y,m,d,op.id);
-        const h2=getH(y,m,d,op.id);
-        const hh=calcH(h2.inicio,h2.fin);
-        const timeStr=h2.inicio&&h2.fin?h2.inicio+' → '+h2.fin:'Sin horario';
-        // Collect all tasks from assigned groups
-        const tasks=[];
-        arr.forEach(gid=>{
-          const g=gG(gid);
-          if(g&&g.tasks.length) g.tasks.forEach(t=>tasks.push({t,bg:g.bg,tc:g.tc,badge:g.badge}));
-        });
+        const h2=getH(y,m,d,op.id);const hh=calcH(h2.inicio,h2.fin);
+        const tasks=[];arr.forEach(gid=>{const g=gG(gid);if(g&&g.tasks.length)g.tasks.forEach(t=>tasks.push({t,bg:g.bg,tc:g.tc,badge:g.badge}));});
         const badges=arr.map(gid=>{const g=gG(gid);return g?'<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:'+g.bg+';color:'+g.tc+'">'+g.badge+'</span>':''}).join(' ');
+        const timeStr=h2.inicio&&h2.fin?h2.inicio+' → '+h2.fin:'Sin horario';
         summary+='<div style="background:#fff;border-radius:8px;border:1px solid #E8ECF4;overflow:hidden;margin-bottom:4px">';
-        // Header row
         summary+='<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#FAFBFF;border-bottom:1px solid #E8ECF4">';
-        summary+='<div style="width:30px;height:30px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;border:2px solid '+op.tc+'40">'+op.init+'</div>';
-        summary+='<div style="flex:1"><div style="font-size:12px;font-weight:600;color:#0F1923">'+op.name+'</div>';
-        summary+='<div style="font-size:10px;color:#8896A7;margin-top:1px">'+timeStr+'</div></div>';
-        summary+='<div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:700;color:'+(hh>0?'#185FA5':'#8896A7')+'">'+(hh>0?hh+'h':'—')+'</div>';
-        summary+='<div style="display:flex;gap:3px;justify-content:flex-end;margin-top:2px">'+badges+'</div></div>';
-        summary+='</div>';
-        // Tasks list
-        if(tasks.length){
-          summary+='<div style="padding:6px 12px 8px">';
-          tasks.forEach(({t,bg,tc,badge})=>{
-            summary+='<div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid #F0F2F8">';
-            summary+='<span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:'+bg+';color:'+tc+';flex-shrink:0">'+badge+'</span>';
-            summary+='<span style="font-size:11px;color:#2D3748">'+t+'</span>';
-            summary+='</div>';
-          });
-          summary+='</div>';
-        }
+        summary+='<div style="width:30px;height:30px;border-radius:50%;background:'+op.bg+';color:'+op.tc+';display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">'+op.init+'</div>';
+        summary+='<div style="flex:1"><div style="font-size:12px;font-weight:600;color:#0F1923">'+op.name+'</div><div style="font-size:10px;color:#8896A7">'+timeStr+'</div></div>';
+        summary+='<div style="text-align:right;flex-shrink:0"><div style="font-size:14px;font-weight:700;color:'+(hh>0?'#185FA5':'#8896A7')+'">'+(hh>0?hh+'h':'—')+'</div><div style="display:flex;gap:3px;justify-content:flex-end;margin-top:2px">'+badges+'</div></div></div>';
+        if(tasks.length){summary+='<div style="padding:6px 12px 8px">';tasks.forEach(({t,bg,tc,badge})=>{summary+='<div style="display:flex;align-items:center;gap:6px;padding:3px 0;border-bottom:1px solid #F0F2F8"><span style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:'+bg+';color:'+tc+';flex-shrink:0">'+badge+'</span><span style="font-size:11px;color:#2D3748">'+t+'</span></div>';});summary+='</div>';}
         summary+='</div>';
       });
       summary+='</div></div>';
@@ -990,46 +826,11 @@ function openP(dks,opId){
   document.getElementById('ov').classList.add('on');
   document.getElementById('ov').onclick=saveAndClose;
 }
-let _saveHTimer={};
-function updDayH(dks,opId,field,val){
-  const{y,m,d}=pdk(dks);const h=getH(y,m,d,opId);
-  h[field]=val;setH(y,m,d,opId,h);
-  const hh=calcH(h.inicio,h.fin);
-  const el=document.getElementById('hrs-'+opId);
-  if(el){el.textContent=hh>0?hh+'h':'';el.className='time-hrs'+(hh>0?' ok':'');}
-  // Debounce save — save 800ms after last change
-  const key=dks+'-'+opId;
-  if(_saveHTimer[key]) clearTimeout(_saveHTimer[key]);
-  _saveHTimer[key]=setTimeout(async()=>{
-    await saveBatch([{y,m,d,opId}]);
-    delete _saveHTimer[key];
-    // Re-render to update hours bar in week view
-    if(view==='week') await renderC(true);
-  },800);
-}
-async function saveAndClose(){
-  if(curDayDk){
-    const{y,m,d}=pdk(curDayDk);
-    await saveBatch(OPS.map(op=>({y,m,d,opId:op.id})));
-  }
-  closeP();
-  await renderC(true); // force reload from Supabase
-}
+function updDayH(dks,opId,field,val){const{y,m,d}=pdk(dks);const h=getH(y,m,d,opId);h[field]=val;setH(y,m,d,opId,h);const hh=calcH(h.inicio,h.fin);const el=document.getElementById(`hrs-${opId}`);if(el){el.textContent=hh>0?hh+'h':'';el.className='time-hrs'+(hh>0?' ok':'');}renderHoursBar();}
+async function saveAndClose(){if(curDayDk){const{y,m,d}=pdk(curDayDk);await saveBatch(OPS.map(op=>({y,m,d,opId:op.id})));}closeP();renderC();}
 function toggleG(dks,opId,gId){
   const{y,m,d}=pdk(dks);let arr=[...getArr(y,m,d,opId)];const idx=arr.indexOf(gId);
-  if(idx>=0){
-    arr.splice(idx,1);
-    if(arr.length===0) setH(y,m,d,opId,{inicio:'',fin:''});
-  } else {
-    arr.push(gId);
-    // If no hours set yet, apply default from first group
-    const h=getH(y,m,d,opId);
-    if(!h.inicio){
-      const g=gG(gId);
-      if(g&&g.hInicio) setH(y,m,d,opId,{inicio:g.hInicio,fin:g.hFin||'18:00'});
-    }
-  }
-  setArr(y,m,d,opId,arr);
+  if(idx>=0)arr.splice(idx,1);else arr.push(gId);setArr(y,m,d,opId,arr);
   const sel=new Set(arr);
   const cc=document.getElementById(`chips-${opId}`);if(cc)cc.innerHTML=arr.length?arr.map(gid=>{const g=gG(gid);return g?`<span class="gchip" style="background:${g.bg};color:${g.tc}">${g.badge} ${g.name}<span class="x" onclick="toggleG('${dks}','${opId}','${gid}')">×</span></span>`:''}).join(''):`<span class="gchip-empty">Sin grupos</span>`;
   const ga=document.getElementById(`gadd-${opId}`);if(ga)ga.innerHTML=groups.map(g=>{const s=sel.has(g.id);return`<button class="gadd-btn${s?' sel':''}" style="${s?`background:${g.bg};color:${g.tc};border-color:${g.tc};border-style:solid`:''}" onclick="toggleG('${dks}','${opId}','${g.id}')">${g.badge} ${g.name}</button>`;}).join('');
@@ -1044,107 +845,60 @@ function closeP(){document.getElementById('panel').classList.remove('on');docume
 // ── VISUAL RANGE CALENDAR ──────────────────────────────────
 function rcRender(){
   const el=document.getElementById('rc-grid');
-  if(!el) return;
   document.getElementById('rc-month-title').textContent=`${MO[rcMonth]} ${rcYear}`;
-  const rawFd=new Date(rcYear,rcMonth,1).getDay();
-  const fd=(rawFd===0)?6:rawFd-1;
+  const fd=new Date(rcYear,rcMonth,1).getDay();
   const dim=new Date(rcYear,rcMonth+1,0).getDate();
   const dip=new Date(rcYear,rcMonth,0).getDate();
   let h='';
-  ['Lu','Ma','Mi','Ju','Vi','Sa','Do'].forEach((d,i)=>
-    h+=`<div class="rc-dh${i===0||i===6?' we':''}">${d}</div>`);
+  ['Do','Lu','Ma','Mi','Ju','Vi','Sa'].forEach((d,i)=>h+=`<div class="rc-dh${i===0||i===6?' we':''}">${d}</div>`);
   const cells=Math.ceil((fd+dim)/7)*7;
-  const sT=rcStart?rcStart.getTime():null;
-  const eT=rcEnd?rcEnd.getTime():null;
-  const hovT=(rcSelecting&&rcHover)?rcHover.getTime():null;
-  const effEnd=eT!==null?eT:hovT;
-  const rMin=(sT!==null&&effEnd!==null)?Math.min(sT,effEnd):null;
-  const rMax=(sT!==null&&effEnd!==null)?Math.max(sT,effEnd):null;
   for(let i=0;i<cells;i++){
     let d,mo=rcMonth,y=rcYear,other=false;
     if(i<fd){d=dip-fd+i+1;other=true;}
     else if(i>=fd+dim){d=i-fd-dim+1;other=true;}
     else d=i-fd+1;
     if(other){h+=`<div class="rc-day rc-other">${d}</div>`;continue;}
-    const ts=new Date(y,mo,d).getTime();
+    const dt=new Date(y,mo,d);
     const isToday=d===today.getDate()&&mo===today.getMonth()&&y===today.getFullYear();
+    const ts=dt.getTime();
     let cls='rc-day';
-    if(isToday) cls+=' rc-today';
-    if(sT!==null&&ts===sT) cls+=' rc-start';
-    if(eT!==null&&ts===eT) cls+=' rc-end';
-    if(rMin!==null&&rMax!==null&&ts>rMin&&ts<rMax) cls+=' rc-in-range';
-    h+=`<div class="${cls}" onclick="rcClick(${y},${mo},${d})" onmousemove="rcHov(${y},${mo},${d})">${d}</div>`;
+    if(isToday)cls+=' rc-today';
+    const s=rcStart?new Date(rcStart).getTime():null;
+    const e=rcEnd?new Date(rcEnd).getTime():null;
+    const hov=rcHover?new Date(rcHover).getTime():null;
+    const rangeEnd=e||(rcSelecting&&hov?hov:null);
+    if(s&&ts===s)cls+=' rc-start';
+    if(rangeEnd&&ts===rangeEnd&&ts!==s)cls+=' rc-end';
+    if(s&&rangeEnd&&ts>Math.min(s,rangeEnd)&&ts<Math.max(s,rangeEnd))cls+=' rc-in-range';
+    h+=`<div class="${cls}" data-y="${y}" data-m="${mo}" data-d="${d}" onclick="rcClick(${y},${mo},${d})" onmouseover="rcHoverDay(${y},${mo},${d})">${d}</div>`;
   }
   el.innerHTML=h;
   rcUpdateInfo();
 }
-
 function rcClick(y,mo,d){
   const dt=new Date(y,mo,d);
-  // If clicking the start day while selecting — CANCEL selection
-  if(rcSelecting&&rcStart&&dt.getTime()===rcStart.getTime()){
-    rcStart=null;rcEnd=null;rcHover=null;rcSelecting=false;
-    rcRender();updatePreview();return;
-  }
-  // If clicking a day while range is complete — check if clicking start or end to deselect
-  if(!rcSelecting&&rcEnd!==null){
-    const st=rcStart.getTime(),en=rcEnd.getTime();
-    if(dt.getTime()===st||dt.getTime()===en){
-      // Clicked start or end — clear and restart
-      rcStart=null;rcEnd=null;rcHover=null;rcSelecting=false;
-      rcRender();updatePreview();return;
-    }
-    // Clicked elsewhere — start new selection
-    rcStart=dt;rcEnd=null;rcHover=null;rcSelecting=true;
-    rcRender();updatePreview();return;
-  }
-  if(!rcStart){
-    // No selection yet — start
-    rcStart=dt;rcEnd=null;rcHover=null;rcSelecting=true;
-  } else if(rcSelecting){
-    // Complete selection
-    if(dt.getTime()<rcStart.getTime()){
-      rcEnd=new Date(rcStart.getTime());rcStart=dt;
-    } else {
-      rcEnd=dt;
-    }
-    rcSelecting=false;rcHover=null;
+  if(!rcStart||(!rcSelecting&&rcEnd)){rcStart=dt;rcEnd=null;rcSelecting=true;}
+  else if(rcSelecting){
+    if(dt<rcStart){rcEnd=rcStart;rcStart=dt;}else rcEnd=dt;
+    rcSelecting=false;
   }
   rcRender();updatePreview();
 }
-
-let _rcHovTimer=null;
-function rcHov(y,mo,d){
-  if(!rcSelecting||!rcStart) return;
-  const dt=new Date(y,mo,d);
-  if(rcHover&&rcHover.getTime()===dt.getTime()) return; // same day, skip
-  rcHover=dt;
-  if(_rcHovTimer) clearTimeout(_rcHovTimer);
-  _rcHovTimer=setTimeout(()=>rcRender(),16); // ~60fps throttle
-}
-
+function rcHoverDay(y,mo,d){if(rcSelecting){rcHover=new Date(y,mo,d);rcRender();}}
 function rcPrev(){rcMonth--;if(rcMonth<0){rcMonth=11;rcYear--;}rcRender();}
 function rcNext(){rcMonth++;if(rcMonth>11){rcMonth=0;rcYear++;}rcRender();}
 function rcUpdateInfo(){
   const el=document.getElementById('range-info');
-  if(!el) return;
-  if(!rcStart){
-    el.innerHTML=`<span style="color:#8896A7"><i class="ti ti-hand-click"></i> 1er clic: día de inicio · 2do clic: día final</span>`;
-    return;
-  }
-  if(rcSelecting){
-    el.innerHTML=`<span style="color:#185FA5;font-weight:500">Inicio: <b>${rcStart.getDate()}/${rcStart.getMonth()+1}</b> — ahora clic en el día final</span>`;
-    return;
-  }
+  if(!rcStart){el.innerHTML=`<span style="color:var(--text3)">Haz clic en el día de inicio y luego en el día final</span>`;return;}
+  if(rcSelecting){el.innerHTML=`<span style="color:var(--text3)">Ahora clic en el día final...</span>`;return;}
   const dates=getRangeDates();
   const f=rcStart,t=rcEnd||rcStart;
-  el.innerHTML=`<span style="color:#0F1923;font-weight:500">${f.getDate()}/${f.getMonth()+1} → ${t.getDate()}/${t.getMonth()+1}</span>&nbsp;<span class="range-tag">${dates.length} día${dates.length!==1?'s':''}</span>&nbsp;<button class="range-clear" onclick="rcClear()"><i class="ti ti-x"></i> Limpiar</button>`;
+  el.innerHTML=`<span><b>${f.getDate()}/${f.getMonth()+1}</b> → <b>${t.getDate()}/${t.getMonth()+1}</b></span><span class="range-tag">${dates.length} día${dates.length!==1?'s':''}</span><button class="range-clear" onclick="rcClear()"><i class="ti ti-x"></i> Limpiar</button>`;
 }
 function rcClear(){rcStart=null;rcEnd=null;rcHover=null;rcSelecting=false;rcRender();updatePreview();}
 
 function openRP(){
-  rcYear=cy;rcMonth=cm;
-  rcStart=null;rcEnd=null;rcHover=null;rcSelecting=false;
+  rcYear=cy;rcMonth=cm;rcStart=null;rcEnd=null;rcHover=null;rcSelecting=false;
   rSelOps.clear();rSelGroups=new Set();
   OPS.forEach(op=>{rOpHours[op.id]={inicio:'09:00',fin:'18:00'};});
   rcRender();renderROps();renderRGroups();updatePreview();
@@ -1163,9 +917,9 @@ function renderROps(){
       <div class="av" style="background:${op.bg};color:${op.tc}">${op.init}</div>
       <span style="font-size:12px;font-weight:500;color:var(--text);flex:1">${op.name}</span>
       ${sel?`<div class="op-row-times" onclick="event.stopPropagation()">
-        ${timeSelect('tinp',h.inicio,"rSetH('"+op.id+"','inicio',this.value)")}
+        <input type="time" class="tinp" value="${h.inicio}" onchange="rSetH('${op.id}','inicio',this.value)">
         <span style="font-size:10px;color:var(--text3)">→</span>
-        ${timeSelect('tinp',h.fin,"rSetH('"+op.id+"','fin',this.value)")}
+        <input type="time" class="tinp" value="${h.fin}" onchange="rSetH('${op.id}','fin',this.value)">
         <span class="op-hrs-badge" style="background:${hc}20;color:${hc}">${hh}h</span>
       </div>`:''}
     </div>`;
@@ -1214,32 +968,15 @@ async function applyRange(){
 async function clearAllRange(){
   const dates=getRangeDates();
   if(!dates.length){alert('Selecciona un período primero.');return;}
-  if(!confirm(`¿Limpiar TODAS las asignaciones del período? (${dates.length} días, todos los operadores)`))return;
+  if(!confirm('¿Limpiar TODAS las asignaciones del período? ('+dates.length+' días, todos los operadores)'))return;
   const entries=[];
-  dates.forEach(d=>{
-    OPS.forEach(op=>{
-      setArr(d.getFullYear(),d.getMonth(),d.getDate(),op.id,[]);
-      setH(d.getFullYear(),d.getMonth(),d.getDate(),op.id,{inicio:'',fin:''});
-      entries.push({y:d.getFullYear(),m:d.getMonth(),d:d.getDate(),opId:op.id});
-    });
-  });
-  await saveBatch(entries);
-  renderC(false);
-  closeRP();
-  showToast('✓ Período limpiado');
+  dates.forEach(d=>{OPS.forEach(op=>{setArr(d.getFullYear(),d.getMonth(),d.getDate(),op.id,[]);setH(d.getFullYear(),d.getMonth(),d.getDate(),op.id,{inicio:'',fin:''});entries.push({y:d.getFullYear(),m:d.getMonth(),d:d.getDate(),opId:op.id});});});
+  await saveBatch(entries);renderC(true);closeRP();showToast('Período limpiado');
 }
-
 async function clearRange(){
-  const dates=getRangeDates();
-  let ops=[...rSelOps];
-  if(!dates.length){alert('Selecciona un período primero.');return;}
-  // If no operators selected, ask to clear ALL
-  if(!ops.length){
-    if(!confirm(`¿Borrar TODAS las asignaciones del período seleccionado (${dates.length} días)?`))return;
-    ops=OPS.map(o=>o.id);
-  } else {
-    if(!confirm(`¿Borrar asignaciones de ${ops.length} operador(es) en ${dates.length} día(s)?`))return;
-  }
+  const dates=getRangeDates(),ops=[...rSelOps];
+  if(!dates.length||!ops.length){alert('Selecciona período y operadores.');return;}
+  if(!confirm(`¿Borrar asignaciones de ${ops.length} operador(es) en ${dates.length} día(s)?`))return;
   const entries=[];
   dates.forEach(d=>{ops.forEach(opId=>{setArr(d.getFullYear(),d.getMonth(),d.getDate(),opId,[]);setH(d.getFullYear(),d.getMonth(),d.getDate(),opId,{inicio:'',fin:''});entries.push({y:d.getFullYear(),m:d.getMonth(),d:d.getDate(),opId});});});
   await saveBatch(entries);renderC();closeRP();
@@ -1264,17 +1001,7 @@ function renderGB(){
     const taskBgH=g.bg.startsWith('#')?hexToRgba(g.bg,0.22):'rgba(255,255,255,0.1)';
     h+=`<div class="gcard" style="border:2px solid ${g.bg};border-radius:10px"><div class="gcard-hd" style="background:${g.bg};border-bottom:2px solid ${g.bg}"><span class="gbg" style="background:${g.bg};color:${g.tc}" onclick="editBadge(${gi})" title="Clic para editar badge">${g.badge}</span><input class="gni" value="${g.name}" onchange="groups[${gi}].name=this.value;renderLeg()" onblur="saveGrupo(groups[${gi}])">${!isSys?`<button class="db3" onclick="delG(${gi})"><i class="ti ti-trash"></i></button>`:''}</div>`;
     if(!isSys){
-      const ghh=calcH(g.hInicio||'09:00',g.hFin||'18:00');
-      h+=`<div class="gcard-body">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:6px 10px;background:#F0F4FF;border-radius:6px;border:1px solid #D0D8F0">
-          <span style="font-size:10px;color:#4A5568;font-weight:600">⏰ Horario por defecto</span>
-          ${timeSelect('tinp',g.hInicio||'09:00',"groups["+gi+"].hInicio=this.value;saveGrupo(groups["+gi+"])")}
-          <span style="font-size:10px;color:#8896A7">→</span>
-          ${timeSelect('tinp',g.hFin||'18:00',"groups["+gi+"].hFin=this.value;saveGrupo(groups["+gi+"])")}
-          <span style="font-size:11px;font-weight:600;color:#185FA5">${ghh}h</span>
-          <span style="font-size:9px;color:#8896A7;margin-left:4px">Se aplica automáticamente al asignar</span>
-        </div>
-        <div class="task-list" id="tl-${g.id}">`;
+      h+=`<div class="gcard-body"><div class="task-list" id="tl-${g.id}">`;
       g.tasks.forEach((t,ti)=>{
         const td2=taskDetail[g.id]&&taskDetail[g.id][ti];
         const hasD=td2&&(td2.desc||td2.steps.length||td2.comments.length);
@@ -1422,16 +1149,11 @@ function closeTeam(){
   document.getElementById('ov').classList.remove('on');
 }
 async function saveTeamAndClose(){
-  console.log('saveTeamAndClose called, OPS:', OPS.length, OPS.map(o=>o.name));
-  try{
-    await saveTeamDB();
-    saveTeam(); // backup to localStorage
-    closeTeam();
-    setTimeout(()=>{renderC(false);renderLeg();},100);
-  }catch(e){
-    console.error('saveTeamAndClose error:',e);
-    showToast('Error al guardar: '+e.message);
-  }
+  await saveTeamDB();
+  saveTeam(); // also save to localStorage as backup
+  closeTeam();
+  setTimeout(()=>{renderC();renderLeg();},100);
+  showToast('✓ Equipo guardado en la nube');
 }
 
 function renderTeam(){
@@ -1478,7 +1200,7 @@ function removeOp(i){
 }
 
 document.addEventListener('keydown',function(e){
-  if(e.key!=='Escape') return;
+  if(e.key!=='Escape')return;
   if(document.getElementById('tp').classList.contains('on')){closeTP();return;}
   if(document.getElementById('gp').classList.contains('on')){closeGP();return;}
   const tp2=document.getElementById('team-panel');
@@ -1487,100 +1209,6 @@ document.addEventListener('keydown',function(e){
   if(document.getElementById('rp').classList.contains('on')){closeRP();return;}
   if(document.getElementById('panel').classList.contains('on')){closeP();return;}
 });
-
-// ── EXPORT WEEK TO EXCEL ──────────────────────────────
-function exportWeekExcel(){
-  const dates=wkDates2();
-  const WN=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-  const wb=XLSX.utils.book_new();
-
-  // ── Sheet 1: Cronograma por operador ──
-  const rows=[];
-  // Header
-  rows.push(['KASHIO PAYMENT OPERATIONS — Cronograma Semanal']);
-  rows.push([`Semana: ${dates[0].getDate()}/${dates[0].getMonth()+1}/${dates[0].getFullYear()} — ${dates[6].getDate()}/${dates[6].getMonth()+1}/${dates[6].getFullYear()}`]);
-  rows.push([]);
-  rows.push(['Operador','Día','Fecha','Grupos','Horario','Horas','Tareas']);
-
-  OPS.forEach(op=>{
-    let opAdded=false;
-    dates.forEach((d,i)=>{
-      const y=d.getFullYear(),m=d.getMonth(),day=d.getDate();
-      const arr=getArr(y,m,day,op.id);
-      if(!arr.length) return;
-      const h=getH(y,m,day,op.id);
-      const hh=calcH(h.inicio,h.fin);
-      const grupos=arr.map(gid=>gG(gid)?.name||gid).join(' + ');
-      const horario=h.inicio&&h.fin?`${h.inicio} → ${h.fin}`:'—';
-      // Get all tasks
-      const tasks=[];
-      arr.forEach(gid=>{const g=gG(gid);if(g&&g.tasks.length)g.tasks.forEach(t=>tasks.push(`[${g.badge}] ${t}`));});
-      rows.push([
-        opAdded?'':op.name,
-        WN[i],
-        `${day}/${m+1}/${y}`,
-        grupos,
-        horario,
-        hh>0?`${hh}h`:'—',
-        tasks.join('\n')
-      ]);
-      opAdded=true;
-    });
-    // If operator has no assignments this week
-    if(!opAdded){
-      rows.push([op.name,'—','—','Sin asignaciones','—','—','—']);
-    }
-    rows.push([]); // blank row between operators
-  });
-
-  const ws=XLSX.utils.aoa_to_sheet(rows);
-
-  // Column widths
-  ws['!cols']=[
-    {wch:20},{wch:6},{wch:12},{wch:35},{wch:14},{wch:7},{wch:60}
-  ];
-
-  // Merge title cells
-  ws['!merges']=[
-    {s:{r:0,c:0},e:{r:0,c:6}},
-    {s:{r:1,c:0},e:{r:1,c:6}},
-  ];
-
-  XLSX.utils.book_append_sheet(wb,'Cronograma',ws);
-
-  // ── Sheet 2: Resumen por operador ──
-  const rows2=[];
-  rows2.push(['RESUMEN DE HORAS — SEMANA']);
-  rows2.push([`${dates[0].getDate()}/${dates[0].getMonth()+1} al ${dates[6].getDate()}/${dates[6].getMonth()+1}`]);
-  rows2.push([]);
-  rows2.push(['Operador','Lun','Mar','Mié','Jue','Vie','Sáb','Dom','Total horas','Meta','Estado']);
-
-  OPS.forEach(op=>{
-    let total=0;
-    const dayHours=dates.map((d,i)=>{
-      const y=d.getFullYear(),m=d.getMonth(),day=d.getDate();
-      const arr=getArr(y,m,day,op.id);
-      if(!arr.length) return '—';
-      const h=getH(y,m,day,op.id);
-      const hh=calcH(h.inicio,h.fin);
-      total+=hh;
-      const grupos=arr.map(gid=>gG(gid)?.badge||gid).join('+');
-      return hh>0?`${grupos} (${hh}h)`:grupos;
-    });
-    const estado=total>=48?'✓ Completo':total>0?`Faltan ${48-total}h`:'Sin asignar';
-    rows2.push([op.name,...dayHours,`${total}h`,`48h`,estado]);
-  });
-
-  const ws2=XLSX.utils.aoa_to_sheet(rows2);
-  ws2['!cols']=[{wch:20},{wch:18},{wch:18},{wch:18},{wch:18},{wch:18},{wch:18},{wch:18},{wch:12},{wch:8},{wch:14}];
-  ws2['!merges']=[{s:{r:0,c:0},e:{r:0,c:10}},{s:{r:1,c:0},e:{r:1,c:10}}];
-  XLSX.utils.book_append_sheet(wb,'Resumen horas',ws2);
-
-  // Download
-  const fecha=`${dates[0].getDate()}-${dates[0].getMonth()+1}-${dates[0].getFullYear()}`;
-  XLSX.writeFile(wb,`Kashio_Turnos_${fecha}.xlsx`);
-}
-
 loadAll();
 </script>
 </body>
