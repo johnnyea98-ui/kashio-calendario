@@ -6,6 +6,7 @@
 <title>Kashio Payment Operations</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -466,6 +467,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
       <button class="vtab on" id="tm" onclick="sv('month')">Mes</button>
       <button class="vtab" id="tw" onclick="sv('week')">Semana</button>
     </div>
+    <button class="btn" id="export-btn" onclick="exportWeekExcel()" style="display:none;color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-file-spreadsheet"></i> Exportar semana</button>
   </div>
 
   <div class="legend" id="leg"></div>
@@ -646,7 +648,16 @@ function getH(y,m,d,op){return hrs[ak(y,m,d,op)]||{inicio:'',fin:''};}
 function setH(y,m,d,op,h){if(h&&(h.inicio||h.fin)){hrs[ak(y,m,d,op)]={inicio:h.inicio||'',fin:h.fin||''};}else{delete hrs[ak(y,m,d,op)];}}
 function getTD(gid,ti){if(!taskDetail[gid])taskDetail[gid]={};if(!taskDetail[gid][ti])taskDetail[gid][ti]={name:gG(gid)?.tasks[ti]||'',desc:'',steps:[],freq:'',comments:[]};return taskDetail[gid][ti];}
 function dateToISO(y,m,d){return`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;}
-function calcH(a,b){if(!a||!b)return 0;const[h1,m1]=a.split(':').map(Number),[h2,m2]=b.split(':').map(Number);let mins=(h2*60+m2)-(h1*60+m1);if(mins<0)mins+=1440;return Math.round(mins/60*10)/10;}
+function calcH(a,b){
+  if(!a||!b)return 0;
+  const[h1,m1]=a.split(':').map(Number),[h2,m2]=b.split(':').map(Number);
+  let mins=(h2*60+m2)-(h1*60+m1);
+  if(mins<0)mins+=1440;
+  const total=Math.round(mins/60*10)/10;
+  // Solo descontar 1h de almuerzo para el turno estándar 09:00→18:00
+  if(a==='09:00'&&b==='18:00') return 8;
+  return total;
+}
 
 // SYNC
 function setSyncing(s){const dot=document.getElementById('sync-dot'),txt=document.getElementById('sync-text');if(s==='saving'){dot.className='sync-dot saving';txt.textContent='Guardando...';}else if(s==='ok'){dot.className='sync-dot';txt.textContent='Sincronizado';}else{dot.className='sync-dot error';txt.textContent='Error';}}
@@ -1476,6 +1487,101 @@ document.addEventListener('keydown',function(e){
   if(document.getElementById('rp').classList.contains('on')){closeRP();return;}
   if(document.getElementById('panel').classList.contains('on')){closeP();return;}
 });
+
+// ── EXPORT WEEK TO EXCEL ──────────────────────────────
+function exportWeekExcel(){
+  const dates=wkDates2();
+  const WN=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  const wb=XLSX.utils.book_new();
+
+  // ── Sheet 1: Cronograma por operador ──
+  const rows=[];
+  // Header
+  rows.push(['KASHIO PAYMENT OPERATIONS — Cronograma Semanal']);
+  rows.push([`Semana: ${dates[0].getDate()}/${dates[0].getMonth()+1}/${dates[0].getFullYear()} — ${dates[6].getDate()}/${dates[6].getMonth()+1}/${dates[6].getFullYear()}`]);
+  rows.push([]);
+  rows.push(['Operador','Día','Fecha','Grupos','Horario','Horas','Tareas']);
+
+  OPS.forEach(op=>{
+    let opAdded=false;
+    dates.forEach((d,i)=>{
+      const y=d.getFullYear(),m=d.getMonth(),day=d.getDate();
+      const arr=getArr(y,m,day,op.id);
+      if(!arr.length) return;
+      const h=getH(y,m,day,op.id);
+      const hh=calcH(h.inicio,h.fin);
+      const grupos=arr.map(gid=>gG(gid)?.name||gid).join(' + ');
+      const horario=h.inicio&&h.fin?`${h.inicio} → ${h.fin}`:'—';
+      // Get all tasks
+      const tasks=[];
+      arr.forEach(gid=>{const g=gG(gid);if(g&&g.tasks.length)g.tasks.forEach(t=>tasks.push(`[${g.badge}] ${t}`));});
+      rows.push([
+        opAdded?'':op.name,
+        WN[i],
+        `${day}/${m+1}/${y}`,
+        grupos,
+        horario,
+        hh>0?`${hh}h`:'—',
+        tasks.join('
+')
+      ]);
+      opAdded=true;
+    });
+    // If operator has no assignments this week
+    if(!opAdded){
+      rows.push([op.name,'—','—','Sin asignaciones','—','—','—']);
+    }
+    rows.push([]); // blank row between operators
+  });
+
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+
+  // Column widths
+  ws['!cols']=[
+    {wch:20},{wch:6},{wch:12},{wch:35},{wch:14},{wch:7},{wch:60}
+  ];
+
+  // Merge title cells
+  ws['!merges']=[
+    {s:{r:0,c:0},e:{r:0,c:6}},
+    {s:{r:1,c:0},e:{r:1,c:6}},
+  ];
+
+  XLSX.utils.book_append_sheet(wb,'Cronograma',ws);
+
+  // ── Sheet 2: Resumen por operador ──
+  const rows2=[];
+  rows2.push(['RESUMEN DE HORAS — SEMANA']);
+  rows2.push([`${dates[0].getDate()}/${dates[0].getMonth()+1} al ${dates[6].getDate()}/${dates[6].getMonth()+1}`]);
+  rows2.push([]);
+  rows2.push(['Operador','Lun','Mar','Mié','Jue','Vie','Sáb','Dom','Total horas','Meta','Estado']);
+
+  OPS.forEach(op=>{
+    let total=0;
+    const dayHours=dates.map((d,i)=>{
+      const y=d.getFullYear(),m=d.getMonth(),day=d.getDate();
+      const arr=getArr(y,m,day,op.id);
+      if(!arr.length) return '—';
+      const h=getH(y,m,day,op.id);
+      const hh=calcH(h.inicio,h.fin);
+      total+=hh;
+      const grupos=arr.map(gid=>gG(gid)?.badge||gid).join('+');
+      return hh>0?`${grupos} (${hh}h)`:grupos;
+    });
+    const estado=total>=48?'✓ Completo':total>0?`Faltan ${48-total}h`:'Sin asignar';
+    rows2.push([op.name,...dayHours,`${total}h`,`48h`,estado]);
+  });
+
+  const ws2=XLSX.utils.aoa_to_sheet(rows2);
+  ws2['!cols']=[{wch:20},{wch:18},{wch:18},{wch:18},{wch:18},{wch:18},{wch:18},{wch:18},{wch:12},{wch:8},{wch:14}];
+  ws2['!merges']=[{s:{r:0,c:0},e:{r:0,c:10}},{s:{r:1,c:0},e:{r:1,c:10}}];
+  XLSX.utils.book_append_sheet(wb,'Resumen horas',ws2);
+
+  // Download
+  const fecha=`${dates[0].getDate()}-${dates[0].getMonth()+1}-${dates[0].getFullYear()}`;
+  XLSX.writeFile(wb,`Kashio_Turnos_${fecha}.xlsx`);
+}
+
 loadAll();
 </script></script>
 </body>
