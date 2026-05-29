@@ -783,6 +783,8 @@ async function renderC(force){
   }
   document.getElementById('cal').innerHTML=view==='month'?renderMonth():renderWeek();
   renderLeg();
+  const hb=document.getElementById('hours-bar');
+  if(hb) hb.style.display=view==='week'?'flex':'none';
   if(view==='week')renderHoursBar();
 }
 async function chM(d){cm+=d;if(cm>11){cm=0;cy++;}if(cm<0){cm=11;cy--;}woff=0;await renderC(true);}
@@ -808,7 +810,7 @@ function sv(v){
   view=v;
   document.getElementById('tm').classList.toggle('on',v==='month');
   document.getElementById('tw').classList.toggle('on',v==='week');
-  renderC();
+  renderC(true);
 }
 
 // DAY PANEL
