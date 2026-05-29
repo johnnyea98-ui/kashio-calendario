@@ -925,17 +925,34 @@ function rcRender(){
     if(s&&ts===s)cls+=' rc-start';
     if(rangeEnd&&ts===rangeEnd&&ts!==s)cls+=' rc-end';
     if(s&&rangeEnd&&ts>Math.min(s,rangeEnd)&&ts<Math.max(s,rangeEnd))cls+=' rc-in-range';
-    h+=`<div class="${cls}" data-y="${y}" data-m="${mo}" data-d="${d}" onclick="rcClick(${y},${mo},${d})" onmouseover="rcHoverDay(${y},${mo},${d})">${d}</div>`;
+    h+=`<div class="${cls}" data-y="${y}" data-m="${mo}" data-d="${d}" onclick="rcClick(${y},${mo},${d})" onmousemove="rcHoverDay(${y},${mo},${d})">${d}</div>`;
   }
   el.innerHTML=h;
   rcUpdateInfo();
 }
 function rcClick(y,mo,d){
   const dt=new Date(y,mo,d);
-  if(!rcStart||(!rcSelecting&&rcEnd)){rcStart=dt;rcEnd=null;rcSelecting=true;}
-  else if(rcSelecting){
-    if(dt<rcStart){rcEnd=rcStart;rcStart=dt;}else rcEnd=dt;
-    rcSelecting=false;
+  // Deselect: click on start day while selecting
+  if(rcSelecting&&rcStart&&dt.getTime()===rcStart.getTime()){
+    rcStart=null;rcEnd=null;rcHover=null;rcSelecting=false;
+    rcRender();updatePreview();return;
+  }
+  // Deselect: click on start or end when range complete
+  if(!rcSelecting&&rcEnd){
+    if(dt.getTime()===rcStart.getTime()||dt.getTime()===rcEnd.getTime()){
+      rcStart=null;rcEnd=null;rcHover=null;rcSelecting=false;
+      rcRender();updatePreview();return;
+    }
+    // Click elsewhere - restart
+    rcStart=dt;rcEnd=null;rcHover=null;rcSelecting=true;
+    rcRender();updatePreview();return;
+  }
+  if(!rcStart){
+    rcStart=dt;rcEnd=null;rcHover=null;rcSelecting=true;
+  } else if(rcSelecting){
+    if(dt.getTime()<rcStart.getTime()){rcEnd=new Date(rcStart);rcStart=dt;}
+    else rcEnd=dt;
+    rcSelecting=false;rcHover=null;
   }
   rcRender();updatePreview();
 }
