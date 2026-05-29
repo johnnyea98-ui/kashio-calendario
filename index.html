@@ -459,7 +459,6 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
     <button class="btn blue" onclick="openAI()"><i class="ti ti-sparkles"></i> Rotación FDS</button>
     <button class="btn purple" onclick="openGP()"><i class="ti ti-layout-list"></i> Grupos y tareas</button>
     <button class="btn" onclick="openTeam()" style="color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-users"></i> Equipo</button>
-    <button class="btn" onclick="openTeam()" style="color:#0F6E56;border-color:#9FE1CB;background:#E1F5EE"><i class="ti ti-users"></i> Equipo</button>
     <div class="vtabs" style="margin-left:auto">
       <button class="vtab on" id="tm" onclick="sv('month')">Mes</button>
       <button class="vtab" id="tw" onclick="sv('week')">Semana</button>
@@ -698,7 +697,7 @@ async function saveTD(gid,ti){const td=getTD(gid,ti);setSyncing('saving');try{aw
 
 // HOURS BAR
 function renderHoursBar(){
-  const wd=getWeekOfToday();let html='';
+  const wd=wkDates2();let html='';
   OPS.forEach(op=>{
     let total=0;wd.forEach(d=>{const h=getH(d.getFullYear(),d.getMonth(),d.getDate(),op.id);total+=calcH(h.inicio,h.fin);});
     const pct=Math.min(total/TARGET*100,100);
