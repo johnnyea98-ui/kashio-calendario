@@ -965,21 +965,15 @@ function closeRP(){document.getElementById('rp').classList.remove('on');document
 
 function renderROps(){
   document.getElementById('r-ops').innerHTML=OPS.map(op=>{
-    const sel=rSelOps.has(op.id),h=rOpHours[op.id]||{inicio:'09:00',fin:'18:00'},hh=calcH(h.inicio,h.fin);
-    const hc=hh>=8?'var(--green)':hh>=6?'var(--amber)':'var(--red)';
-    return`<div class="op-row${sel?' sel':''}" style="${sel?`border-color:${op.tc};background:${op.bg}`:''}" onclick="rToggleOp('${op.id}')">
-      <i class="ti ${sel?'ti-checkbox':'ti-square'}" style="font-size:16px;${sel?`color:${op.tc}`:'color:var(--border2)'}"></i>
-      <div class="av" style="background:${op.bg};color:${op.tc}">${op.init}</div>
-      <span style="font-size:12px;font-weight:500;color:var(--text);flex:1">${op.name}</span>
-      ${sel?`<div class="op-row-times" onclick="event.stopPropagation()">
-        ${timeSelect('tinp',h.inicio,"rSetH('"+op.id+"','inicio',this.value)")}
-        <span style="font-size:10px;color:var(--text3)">→</span>
-        ${timeSelect('tinp',h.fin,"rSetH('"+op.id+"','fin',this.value)")}
-        <span class="op-hrs-badge" style="background:${hc}20;color:${hc}">${hh}h</span>
-      </div>`:''}
-    </div>`;
+    const sel=rSelOps.has(op.id);
+    return '<div class="op-row'+(sel?' sel':'')+'" style="border-left-color:'+op.tc+';'+(sel?'border-color:'+op.tc+'40;background:#FAFCFF':'')+'" onclick="rToggleOp(\''+op.id+'\')">'
+      +'<i class="ti '+(sel?'ti-checkbox':'ti-square')+'" style="font-size:16px;'+(sel?'color:'+op.tc:'color:var(--border2)')+'"></i>'
+      +'<div class="av" style="background:'+op.bg+';color:'+op.tc+'">'+op.init+'</div>'
+      +'<span style="font-size:12px;font-weight:600;color:#0F1923;flex:1">'+op.name+'</span>'
+      +'</div>';
   }).join('');
 }
+
 function renderRGroups(){
   document.getElementById('r-assign-body').innerHTML=
     groups.map(g=>{const sel=rSelGroups.has(g.id);return`<button class="g-sel-btn${sel?' sel':''}" style="${sel?`background:${g.bg};color:${g.tc};border-color:${g.tc};border-style:solid`:''}" onclick="rToggleGroup('${g.id}')">${g.badge} ${g.name}</button>`;}).join('');
@@ -1029,44 +1023,34 @@ function getRangeDates(){
 function updatePreview(){
   rcUpdateInfo();
   const dates=getRangeDates(),ops=[...rSelOps],grps=[...rSelGroups];
-  if(!dates.length||!ops.length||!grps.length){document.getElementById('r-preview').textContent='Completa los pasos para ver el resumen.';return;}
+  const el=document.getElementById('r-preview');
+  if(!dates.length||!ops.length||!grps.length){
+    el.innerHTML='<span style="color:var(--text3);font-size:12px">Selecciona período, operadores y grupos.</span>';
+    return;
+  }
   const f=dates[0],t=dates[dates.length-1];
-  const opLines=ops.map(id=>{const op=OPS.find(o=>o.id===id),h=rOpHours[id]||{},hh=calcH(h.inicio,h.fin);return`<b>${op.short}</b>${hh>0?' ('+hh+'h/día)':''}`;}).join(', ');
-  const gNames=grps.map(id=>gG(id)?.badge||id).join(' + ');
-  document.getElementById('r-preview').innerHTML=`${opLines}<br>Grupos: <b>${gNames}</b><br>Del <b>${f.getDate()}/${f.getMonth()+1}</b> al <b>${t.getDate()}/${t.getMonth()+1}</b> — <b>${dates.length}</b> día${dates.length!==1?'s':''}`;
+  const grpBadges=grps.map(id=>{const g=gG(id);return g?'<span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;background:'+g.bg+';color:'+g.tc+'">'+g.badge+'</span>':id;}).join(' ');
+  let html='<div style="margin-bottom:8px;font-size:11px"><span style="color:var(--text3)">Período: </span><b style="color:var(--text)">'+f.getDate()+'/'+(f.getMonth()+1)+' → '+t.getDate()+'/'+(t.getMonth()+1)+'</b> <span style="color:var(--text3)">('+dates.length+' día'+(dates.length!==1?'s':'')+')</span></div>';
+  html+='<div style="margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-size:10px;color:var(--text3)">Grupos:</span>'+grpBadges+'</div>';
+  html+='<div style="display:flex;flex-direction:column;gap:6px">';
+  ops.forEach(opId=>{
+    const op=OPS.find(o=>o.id===opId);if(!op)return;
+    const h=rOpHours[opId]||{inicio:'09:00',fin:'18:00'};
+    const hh=calcH(h.inicio,h.fin);
+    const hc=hh>=8?'var(--green)':hh>=4?'var(--amber)':'var(--red)';
+    html+='<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface2);border-radius:6px;border:1px solid var(--border)">'
+      +'<div class="av" style="background:'+op.bg+';color:'+op.tc+';width:26px;height:26px;font-size:9px;flex-shrink:0">'+op.init+'</div>'
+      +'<span style="font-size:12px;font-weight:600;color:var(--text);flex:1">'+op.short+'</span>'
+      +'<div style="display:flex;align-items:center;gap:4px" onclick="event.stopPropagation()">'
+      +timeSelect('tinp',h.inicio,"rSetH('"+opId+"','inicio',this.value)")
+      +'<span style="font-size:10px;color:var(--text3)">→</span>'
+      +timeSelect('tinp',h.fin,"rSetH('"+opId+"','fin',this.value)")
+      +'<span style="font-size:11px;font-weight:700;color:'+hc+';min-width:28px;text-align:right">'+hh+'h</span>'
+      +'</div></div>';
+  });
+  html+='</div>';
+  el.innerHTML=html;
 }
-
-async function applyRange(){
-  const dates=getRangeDates(),ops=[...rSelOps],grps=[...rSelGroups];
-  if(!dates.length||!ops.length||!grps.length){alert('Selecciona período, operadores y grupos.');return;}
-  const ow=document.getElementById('r-overwrite').checked,entries=[];
-  dates.forEach(d=>{ops.forEach(opId=>{
-    const y=d.getFullYear(),m=d.getMonth(),day=d.getDate();
-    if(ow)setArr(y,m,day,opId,grps);else{const ex=getArr(y,m,day,opId);setArr(y,m,day,opId,[...new Set([...ex,...grps])]);}
-    const h=rOpHours[opId]||{inicio:'09:00',fin:'18:00'};setH(y,m,day,opId,h);
-    entries.push({y,m,d:day,opId});
-  });});
-  await saveBatch(entries);renderC();closeRP();
-}
-async function clearAllRange(){
-  const dates=getRangeDates();
-  if(!dates.length){alert('Selecciona un período primero.');return;}
-  if(!confirm('Limpiar TODAS las asignaciones del período? ('+dates.length+' días)'))return;
-  const entries=[];
-  dates.forEach(d=>{OPS.forEach(op=>{setArr(d.getFullYear(),d.getMonth(),d.getDate(),op.id,[]);setH(d.getFullYear(),d.getMonth(),d.getDate(),op.id,{inicio:'',fin:''});entries.push({y:d.getFullYear(),m:d.getMonth(),d:d.getDate(),opId:op.id});});});
-  await saveBatch(entries);renderC(true);closeRP();showToast('Período limpiado');
-}
-async function clearRange(){
-  const dates=getRangeDates(),ops=[...rSelOps];
-  if(!dates.length||!ops.length){alert('Selecciona período y operadores.');return;}
-  if(!confirm(`¿Borrar asignaciones de ${ops.length} operador(es) en ${dates.length} día(s)?`))return;
-  const entries=[];
-  dates.forEach(d=>{ops.forEach(opId=>{setArr(d.getFullYear(),d.getMonth(),d.getDate(),opId,[]);setH(d.getFullYear(),d.getMonth(),d.getDate(),opId,{inicio:'',fin:''});entries.push({y:d.getFullYear(),m:d.getMonth(),d:d.getDate(),opId});});});
-  await saveBatch(entries);renderC();closeRP();
-}
-
-// ── GROUPS PANEL ──────────────────────────────────────────
-let dragSrcGid=null,dragSrcTi=null;
 
 function openGP(){renderGB();document.getElementById('gp').classList.add('on');document.getElementById('ov').classList.add('on');document.getElementById('ov').onclick=closeGP;}
 function closeGP(){document.getElementById('gp').classList.remove('on');document.getElementById('ov').classList.remove('on');renderC();}
