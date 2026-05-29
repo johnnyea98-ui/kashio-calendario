@@ -1399,17 +1399,7 @@ async function applyRange(){
   showToast('✓ '+entries.length+' asignación'+(entries.length!==1?'es':'')+' guardada'+(entries.length!==1?'s':''));
 }
 
-loadAll();
-</script>
-</body>
-</html>async function clearAllRange(){
-  const dates=getRangeDates();
-  if(!dates.length){showToast('Selecciona un período primero.');return;}
-  if(!confirm('Limpiar TODAS las asignaciones del período? ('+dates.length+' días, todos los operadores)'))return;
-  const entries=[];
-  dates.forEach(d=>{OPS.forEach(op=>{setArr(d.getFullYear(),d.getMonth(),d.getDate(),op.id,[]);setH(d.getFullYear(),d.getMonth(),d.getDate(),op.id,{inicio:'',fin:''});entries.push({y:d.getFullYear(),m:d.getMonth(),d:d.getDate(),opId:op.id});});});
-  await saveBatch(entries);renderC(true);closeRP();showToast('Período limpiado');
-}
+
 async function clearRange(){
   const dates=getRangeDates();
   let ops=[...rSelOps];
@@ -1429,5 +1419,16 @@ async function clearRange(){
     });
   });
   await saveBatch(entries);renderC(true);closeRP();showToast('Asignaciones borradas');
+}
+loadAll();
+</script>
+</body>
+</html>async function clearAllRange(){
+  const dates=getRangeDates();
+  if(!dates.length){showToast('Selecciona un período primero.');return;}
+  if(!confirm('Limpiar TODAS las asignaciones del período? ('+dates.length+' días, todos los operadores)'))return;
+  const entries=[];
+  dates.forEach(d=>{OPS.forEach(op=>{setArr(d.getFullYear(),d.getMonth(),d.getDate(),op.id,[]);setH(d.getFullYear(),d.getMonth(),d.getDate(),op.id,{inicio:'',fin:''});entries.push({y:d.getFullYear(),m:d.getMonth(),d:d.getDate(),opId:op.id});});});
+  await saveBatch(entries);renderC(true);closeRP();showToast('Período limpiado');
 }
 
